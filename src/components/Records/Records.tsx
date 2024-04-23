@@ -1,7 +1,7 @@
 import './Records.scss';
 
 //hooks
-import { useState } from 'react';
+import { useState, SetStateAction, Dispatch } from 'react';
 
 //components
 import {
@@ -29,9 +29,10 @@ export default function Records({
   setRecords
 }: {
   records: RecordElementType[];
+  setRecords: Dispatch<SetStateAction<RecordElementType[]>>;
 }): JSX.Element {
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState<RecordElementType>({
+  const [openedOrder, setOpenedOrder] = useState<RecordElementType>({
     number: undefined,
     datetime: undefined,
     clientsFirm: undefined,
@@ -102,27 +103,27 @@ export default function Records({
 
   const openModal = (item: TableDataItem) => {
     const currentRecord = records.find(record => record.number === item.id);
-    setModalContent(currentRecord);
+    setOpenedOrder(currentRecord);
     setIsModalOpened(true);
   };
 
   const closeModal = () => {
     setIsModalOpened(false);
-    setModalContent({});
+    setOpenedOrder({});
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
-    setModalContent({ ...modalContent, [name]: value });
+    setOpenedOrder({ ...openedOrder, [name]: value });
   };
 
   const saveRecord = () => {
     const newRecords = records.map(record => {
-      if (record.number !== modalContent.number) {
+      if (record.number !== openedOrder.number) {
         return record;
       }
-      if (record.number === modalContent.number) {
-        return modalContent;
+      if (record.number === openedOrder.number) {
+        return openedOrder;
       }
     });
     setRecords(newRecords);
@@ -135,47 +136,47 @@ export default function Records({
   };
 
   const setNewRecordStatus = event => {
-    setModalContent({ ...modalContent, status: event[0] });
+    setOpenedOrder({ ...openedOrder, status: event[0] });
   };
 
   return (
     <>
       <MyTable data={data} columns={columns} getRowActions={getRowActions} />
       <Modal open={isModalOpened} onClose={closeModal}>
-        <TextInput label={Number} disabled={true} value={modalContent?.number?.toString()} />
-        <TextInput label={DateTime} disabled={true} value={modalContent?.datetime} />
+        <TextInput label={Number} disabled={true} value={openedOrder?.number?.toString()} />
+        <TextInput label={DateTime} disabled={true} value={openedOrder?.datetime} />
         <TextInput
           label={ClientsFirm}
-          value={modalContent?.clientsFirm}
+          value={openedOrder?.clientsFirm}
           name="clientsFirm"
           onChange={handleChange}
         />
         <TextInput
           label={Shipper}
-          value={modalContent?.shipperName}
+          value={openedOrder?.shipperName}
           name="shipperName"
           onChange={handleChange}
         />
         <TextInput
           label={ShipperNumber}
-          value={modalContent?.shipperPhone}
+          value={openedOrder?.shipperPhone}
           name="shipperPhone"
           onChange={handleChange}
         />
         <TextInput
           label={Comment}
-          value={modalContent?.comment}
+          value={openedOrder?.comment}
           name="comment"
           onChange={handleChange}
         />
         {/* <TextInput
           label={Status}
-          value={modalContent?.status}
+          value={openedOrder?.status}
           name="status"
           onChange={handleChange}
         /> */}
         <Select
-          placeholder={modalContent?.status}
+          placeholder={openedOrder?.status}
           onUpdate={setNewRecordStatus}
           options={[
             { content: 'новая', value: 'новая' },
@@ -185,7 +186,7 @@ export default function Records({
         />
         <TextInput
           label={AtiCode}
-          value={modalContent?.atiCode?.toString()}
+          value={openedOrder?.atiCode?.toString()}
           name="atiCode"
           onChange={handleChange}
         />
