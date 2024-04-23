@@ -8,7 +8,7 @@ export default function Records(): JSX.Element {
   return (
     <ul>
       {records.map(record => (
-        <RecordElement record={record} />
+        <RecordElement key={record.number} record={record} />
       ))}
     </ul>
   );
