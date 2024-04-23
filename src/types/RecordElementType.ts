@@ -1,12 +1,14 @@
+// import { RecordStatus, RecordStatusEnum } from './RecordStatus';
+
 import { RecordStatus } from './RecordStatus';
 
-export type RecordElementType = {
-  number: number;
-  datetime: string; // date time string format with toISOString() method
-  companyName: string;
-  clientName: string;
-  phone: string;
-  comment: string;
-  status: RecordStatus;
-  atiCode: number;
-};
+export interface RecordElementType {
+  number: number | undefined;
+  datetime: string | undefined; // date time string format with toISOString() method
+  clientsFirm: string | undefined;
+  shipperName: string | undefined;
+  shipperPhone: string | undefined;
+  comment?: string | undefined;
+  status: RecordStatus | undefined;
+  atiCode: number | undefined;
+}
