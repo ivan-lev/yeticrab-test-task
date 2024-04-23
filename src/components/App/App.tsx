@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <div>Текущие заявки</div>
-      <Records records={records} />
+      <Records records={records} setRecords={setRecords} />
       <RecordsCounter amount={records?.length || 0} />
     </>
   );
