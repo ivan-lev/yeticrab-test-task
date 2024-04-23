@@ -1,10 +1,12 @@
-import { useState } from 'react';
 import './App.css';
+
+import Records from '../Records/Records';
 
 function App() {
   return (
     <>
-      <div>Hello, world!</div>
+      <div>Текущие заявки</div>
+      <Records />
     </>
   );
 }
