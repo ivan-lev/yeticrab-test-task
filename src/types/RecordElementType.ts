@@ -2,10 +2,10 @@ import { RecordStatus } from './RecordStatus';
 
 export type RecordElementType = {
   number: number;
-  datetime: number; // getting number using Date.now()
+  datetime: string; // date time string format with toISOString() method
   companyName: string;
   clientName: string;
-  clientPhone: string;
+  phone: string;
   comment: string;
   status: RecordStatus;
   atiCode: number;
