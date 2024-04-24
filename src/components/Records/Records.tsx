@@ -91,12 +91,6 @@ export default function Records({
   const getRowActions = () => {
     return isAdminMode
       ? [
-          // {
-          //   text: 'Print',
-          //   handler: (item: TableDataItem) => {
-          //     console.log(item);
-          //   }
-          // },
           {
             text: 'Редактировать',
             handler: (item: TableDataItem) => {
@@ -186,7 +180,7 @@ export default function Records({
       <Modal open={isModalOpened} onClose={closeOrder}>
         <div className="records__modal">
           <TextInput label={Number} disabled={true} value={openedOrder?.number?.toString()} />
-          <TextInput label={DateTime} disabled={true} value={openedOrder?.datetime} />
+          <TextInput label={DateTime} disabled={true} value={getDate(openedOrder?.datetime)} />
           <TextInput
             label={ClientsFirm}
             value={openedOrder?.clientsFirm}
