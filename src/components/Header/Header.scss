@@ -1,0 +1,11 @@
+.header {
+  display: flex;
+  flex: 0 0 auto;
+  width: 100%;
+  justify-content: flex-end;
+
+  &__button:focus,
+  &__button:focus-visible {
+    outline: 0;
+  }
+}
