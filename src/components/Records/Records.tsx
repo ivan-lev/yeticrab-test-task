@@ -1,18 +1,21 @@
 import './Records.scss';
 
-//hooks
+//Рooks
 import { useState, SetStateAction, Dispatch } from 'react';
 
-//components
+//Components
+import RecordsCounter from '../RecordsCounter/RecordsCounter';
+
+//Gravitu IU components
 import {
-  Table,
+  Button,
   Link,
   Modal,
+  Table,
+  TableDataItem,
   TextInput,
-  Button,
   Select,
-  withTableActions,
-  TableDataItem
+  withTableActions
 } from '@gravity-ui/uikit';
 
 //utils and variables
@@ -22,17 +25,21 @@ import { getAtiLink } from '../../utils/getAtiLink';
 //types
 import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
-import { RecordStatus } from '../../types/RecordStatus';
 
 export default function Records({
   records,
-  setRecords
+  setRecords,
+  isAdminMode,
+  latestRecordNumber,
+  setLatestRecordNumber
 }: {
   records: RecordElementType[];
   setRecords: Dispatch<SetStateAction<RecordElementType[]>>;
+  isAdminMode: boolean;
+  latestRecordNumber: number;
+  setLatestRecordNumber: Dispatch<SetStateAction<number>>;
 }): JSX.Element {
-  const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
-  const [openedOrder, setOpenedOrder] = useState<RecordElementType>({
+  const emptyOrderElement: RecordElementType = {
     number: undefined,
     datetime: undefined,
     clientsFirm: undefined,
@@ -41,7 +48,11 @@ export default function Records({
     comment: undefined,
     status: undefined,
     atiCode: undefined
-  });
+  };
+
+  const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
+  const [openedOrder, setOpenedOrder] = useState<RecordElementType>(emptyOrderElement);
+  const [isNewOrder, setIsNewOrder] = useState<boolean>(false);
 
   const MyTable = withTableActions(Table);
 
@@ -78,38 +89,48 @@ export default function Records({
   });
 
   const getRowActions = () => {
-    return [
-      // {
-      //   text: 'Print',
-      //   handler: (item: TableDataItem) => {
-      //     console.log(item);
-      //   }
-      // },
-      {
-        text: 'Редактировать',
-        handler: (item: TableDataItem) => {
-          openModal(item);
-        }
-      },
-      {
-        text: 'Удалить',
-        handler: (item: TableDataItem) => {
-          deleteRecord(item);
-        },
-        theme: 'danger'
-      }
-    ];
+    return isAdminMode
+      ? [
+          // {
+          //   text: 'Print',
+          //   handler: (item: TableDataItem) => {
+          //     console.log(item);
+          //   }
+          // },
+          {
+            text: 'Редактировать',
+            handler: (item: TableDataItem) => {
+              openOrder(item);
+            }
+          },
+          {
+            text: 'Удалить',
+            handler: (item: TableDataItem) => {
+              deleteRecord(item);
+            },
+            theme: 'danger'
+          }
+        ]
+      : [];
   };
 
-  const openModal = (item: TableDataItem) => {
+  const openOrder = (item: TableDataItem) => {
     const currentRecord = records.find(record => record.number === item.id);
     setOpenedOrder(currentRecord);
     setIsModalOpened(true);
   };
 
-  const closeModal = () => {
+  const openEmptyOrder = () => {
+    setIsNewOrder(true);
+    const currentRecord = emptyOrderElement;
+    setOpenedOrder(currentRecord);
+    setIsModalOpened(true);
+  };
+
+  const closeOrder = () => {
     setIsModalOpened(false);
-    setOpenedOrder({});
+    setOpenedOrder(emptyOrderElement);
+    isNewOrder && setIsNewOrder(false);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +148,17 @@ export default function Records({
       }
     });
     setRecords(newRecords);
-    closeModal();
+    closeOrder();
+  };
+
+  const addNewRecord = () => {
+    openedOrder.number = latestRecordNumber;
+    const currentTime = new Date();
+    openedOrder.datetime = currentTime.toISOString();
+    setLatestRecordNumber(latestRecordNumber + 1);
+    const newRecords = [...records, openedOrder];
+    setRecords(newRecords);
+    closeOrder();
   };
 
   const deleteRecord = (item: TableDataItem) => {
@@ -135,67 +166,73 @@ export default function Records({
     setRecords(newRecords);
   };
 
-  const setNewRecordStatus = event => {
+  const setNewRecordStatus = (event: any): void => {
     setOpenedOrder({ ...openedOrder, status: event[0] });
   };
 
   return (
     <>
-      <MyTable data={data} columns={columns} getRowActions={getRowActions} />
-      <Modal open={isModalOpened} onClose={closeModal}>
-        <TextInput label={Number} disabled={true} value={openedOrder?.number?.toString()} />
-        <TextInput label={DateTime} disabled={true} value={openedOrder?.datetime} />
-        <TextInput
-          label={ClientsFirm}
-          value={openedOrder?.clientsFirm}
-          name="clientsFirm"
-          onChange={handleChange}
-        />
-        <TextInput
-          label={Shipper}
-          value={openedOrder?.shipperName}
-          name="shipperName"
-          onChange={handleChange}
-        />
-        <TextInput
-          label={ShipperNumber}
-          value={openedOrder?.shipperPhone}
-          name="shipperPhone"
-          onChange={handleChange}
-        />
-        <TextInput
-          label={Comment}
-          value={openedOrder?.comment}
-          name="comment"
-          onChange={handleChange}
-        />
-        {/* <TextInput
-          label={Status}
-          value={openedOrder?.status}
-          name="status"
-          onChange={handleChange}
-        /> */}
-        <Select
-          placeholder={openedOrder?.status}
-          onUpdate={setNewRecordStatus}
-          options={[
-            { content: 'новая', value: 'новая' },
-            { content: 'в процессе', value: 'в процессе' },
-            { content: 'завершенная', value: 'завершенная' }
-          ]}
-        />
-        <TextInput
-          label={AtiCode}
-          value={openedOrder?.atiCode?.toString()}
-          name="atiCode"
-          onChange={handleChange}
-        />
-        <Button view="outlined-warning" onClick={closeModal}>
-          Закрыть
-        </Button>
-        <Button view="outlined-success" onClick={saveRecord}>
-          Сохранить
-        </Button>
+      <MyTable
+        className="records__table"
+        data={data}
+        columns={columns}
+        getRowActions={getRowActions}
+      />
+      <div className="records__bottom">
+        <RecordsCounter amount={records?.length || 0} />
+        {isAdminMode && <Button onClick={openEmptyOrder}>Добавить заявку</Button>}
+      </div>
+
+      <Modal open={isModalOpened} onClose={closeOrder}>
+        <div className="records__modal">
+          <TextInput label={Number} disabled={true} value={openedOrder?.number?.toString()} />
+          <TextInput label={DateTime} disabled={true} value={openedOrder?.datetime} />
+          <TextInput
+            label={ClientsFirm}
+            value={openedOrder?.clientsFirm}
+            name="clientsFirm"
+            onChange={handleChange}
+          />
+          <TextInput
+            label={Shipper}
+            value={openedOrder?.shipperName}
+            name="shipperName"
+            onChange={handleChange}
+          />
+          <TextInput
+            label={ShipperNumber}
+            value={openedOrder?.shipperPhone}
+            name="shipperPhone"
+            onChange={handleChange}
+          />
+          <TextInput
+            label={Comment}
+            value={openedOrder?.comment}
+            name="comment"
+            onChange={handleChange}
+          />
+          <Select
+            placeholder={openedOrder?.status}
+            onUpdate={setNewRecordStatus}
+            options={[
+              { content: 'новая', value: 'новая' },
+              { content: 'в процессе', value: 'в процессе' },
+              { content: 'завершенная', value: 'завершенная' }
+            ]}
+          />
+          <TextInput
+            label={AtiCode}
+            value={openedOrder?.atiCode?.toString()}
+            name="atiCode"
+            onChange={handleChange}
+          />
+          <Button view="outlined-warning" onClick={closeOrder}>
+            Закрыть
+          </Button>
+          <Button view="outlined-success" onClick={!isNewOrder ? saveRecord : addNewRecord}>
+            {`${!isNewOrder ? 'Сохранить' : 'Добавить'}`}
+          </Button>
+        </div>
       </Modal>
     </>
   );
