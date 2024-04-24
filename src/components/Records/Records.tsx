@@ -116,7 +116,7 @@ export default function Records({
 
   const openOrder = (item: TableDataItem) => {
     const currentRecord = records.find(record => record.number === item.id);
-    setOpenedOrder(currentRecord);
+    setOpenedOrder(currentRecord ?? emptyOrderElement);
     setIsModalOpened(true);
   };
 
