@@ -171,7 +171,7 @@ export default function Records({
   };
 
   return (
-    <>
+    <div className="records">
       <MyTable
         className="records__table"
         data={data}
@@ -234,6 +234,6 @@ export default function Records({
           </Button>
         </div>
       </Modal>
-    </>
+    </div>
   );
 }
