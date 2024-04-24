@@ -1,21 +1,32 @@
-import './App.css';
+import './App.scss';
 
+// Hooks
 import { useState } from 'react';
 
-import Records from '../Records/Records';
-import RecordsCounter from '../RecordsCounter/RecordsCounter';
+// Components
+import Header from '../Header/Header';
+import Main from '../Main/Main';
+import Footer from '../Footer/Footer';
 
+// Variables, types, interfaces
 import { templateRecords } from '../../variables/templateRecords';
+import { RecordElementType } from '../../types/RecordElementType';
 
-function App() {
-  const [records, setRecords] = useState(templateRecords);
+export default function App() {
+  const [records, setRecords] = useState<RecordElementType[]>(templateRecords);
+  const [latestRecordNumber, setLatestRecordNumber] = useState<number>(129);
+  const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   return (
     <>
-      <div>Текущие заявки</div>
-      <Records records={records} setRecords={setRecords} />
-      <RecordsCounter amount={records?.length || 0} />
+      <Header isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode}></Header>
+      <Main
+        records={records}
+        setRecords={setRecords}
+        isAdminMode={isAdminMode}
+        latestRecordNumber={latestRecordNumber}
+        setLatestRecordNumber={setLatestRecordNumber}
+      />
+      <Footer />
     </>
   );
 }
-
-export default App;
