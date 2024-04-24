@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App/App.tsx';
-import './index.css';
+import './index.scss';
 
 // Gravity UI styles and themes
 import { ThemeProvider } from '@gravity-ui/uikit';
