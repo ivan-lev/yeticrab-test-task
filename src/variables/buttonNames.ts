@@ -3,5 +3,7 @@ export const BUTTON_NAMES = {
   EDIT_ORDER: 'Редактировать',
   DELETE_ORDER: 'Удалить',
   ADMIN_MODE: 'Перейти в режим администратора',
-  USER_MODE: 'Перейти в режим просмотра'
+  USER_MODE: 'Перейти в режим просмотра',
+  CLOSE: 'Закрыть',
+  SAVE: 'Сохранить'
 };
