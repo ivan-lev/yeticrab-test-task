@@ -12,6 +12,9 @@ import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
 import { RecordStatusEnum } from '../../types/RecordStatus';
 
+// Variables
+import { BUTTON_NAMES } from '../../variables/buttonNames';
+
 export default function ModalWindow({
   isModalOpened,
   closeOrder,
@@ -101,7 +104,7 @@ export default function ModalWindow({
           <Button className="modal-window__button" view="outlined-warning" onClick={closeOrder}>
             <span className="button-content">
               <CircleXmark />
-              Закрыть
+              {BUTTON_NAMES.CLOSE}
             </span>
           </Button>
           <Button
@@ -113,12 +116,12 @@ export default function ModalWindow({
             {!isNewOrder ? (
               <span className="button-content">
                 <FloppyDisk />
-                Сохранить
+                {BUTTON_NAMES.SAVE}
               </span>
             ) : (
               <span className="button-content">
                 <CirclePlus />
-                Добавить
+                {BUTTON_NAMES.ADD_ORDER}
               </span>
             )}
           </Button>
