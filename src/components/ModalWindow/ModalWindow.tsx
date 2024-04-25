@@ -86,11 +86,6 @@ export default function ModalWindow({
             placeholder={openedOrder?.status}
             onUpdate={setNewRecordStatus}
             options={statusOptionsArray}
-            // options={[
-            //   { content: 'новая', value: 'новая' },
-            //   { content: 'в процессе', value: 'в процессе' },
-            //   { content: 'завершенная', value: 'завершенная' }
-            // ]}
           />
         </div>
 
