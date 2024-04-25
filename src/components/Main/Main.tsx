@@ -9,7 +9,7 @@ import Records from '../Records/Records';
 // Gravity UI components
 import { Text } from '@gravity-ui/uikit';
 
-// Variables, types, interfaces
+// Types, interfaces
 import { RecordElementType } from '../../types/RecordElementType';
 
 export default function Main({

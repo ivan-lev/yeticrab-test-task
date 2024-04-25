@@ -3,10 +3,10 @@ import './ModalWindow.scss';
 // Gravity UI components
 import { Button, Modal, Select, TextArea, TextInput } from '@gravity-ui/uikit';
 
-// Utils and variables
+// Utils
 import { getDate } from '../../utils/getDate';
 
-// Types and interfaces
+// Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
 import { RecordStatusEnum } from '../../types/RecordStatus';

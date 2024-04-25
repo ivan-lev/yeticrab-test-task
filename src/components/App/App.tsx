@@ -8,8 +8,10 @@ import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 
-// Variables, types, interfaces
+// Variables,
 import { templateRecords } from '../../variables/templateRecords';
+
+// Types, interfaces
 import { RecordElementType } from '../../types/RecordElementType';
 
 export default function App() {

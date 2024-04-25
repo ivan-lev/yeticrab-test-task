@@ -1,3 +1,4 @@
+// Gravity UI components
 import { Text } from '@gravity-ui/uikit';
 
 export default function RecordsCounter({ amount }: { amount: number }): JSX.Element {

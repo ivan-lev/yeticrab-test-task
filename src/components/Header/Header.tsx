@@ -1,8 +1,9 @@
 import './Header.scss';
 
-//React components
+// React components
 import { Dispatch, SetStateAction } from 'react';
 
+// Gravity UI components
 import { Button } from '@gravity-ui/uikit';
 
 export default function Header({

@@ -1,20 +1,20 @@
 import './Records.scss';
 
-//Hooks
+// Hooks
 import { useState, SetStateAction, Dispatch } from 'react';
 
-//Components
+// Components
 import ModalWindow from '../ModalWindow/ModalWindow';
 import RecordsCounter from '../RecordsCounter/RecordsCounter';
 
-//Gravitu IU components
+// Gravitu IU components
 import { Button, Link, Table, TableDataItem, withTableActions } from '@gravity-ui/uikit';
 
-//utils and variables
+// Utils
 import { getDate } from '../../utils/getDate';
 import { getAtiLink } from '../../utils/getAtiLink';
 
-//types
+// Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
 
