@@ -9,3 +9,9 @@
   height: 100%;
   box-sizing: border-box;
 }
+
+.button-content {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
