@@ -95,14 +95,15 @@ export default function Records({
             text: 'Редактировать',
             handler: (item: TableDataItem) => {
               openOrder(item);
-            }
+            },
+            theme: 'normal' as const
           },
           {
             text: 'Удалить',
             handler: (item: TableDataItem) => {
               deleteRecord(item);
             },
-            theme: 'danger'
+            theme: 'danger' as const
           }
         ]
       : [];
