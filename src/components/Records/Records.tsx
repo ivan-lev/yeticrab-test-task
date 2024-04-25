@@ -4,6 +4,7 @@ import './Records.scss';
 import { useState, SetStateAction, Dispatch } from 'react';
 
 //Components
+import ModalWindow from '../ModalWindow/ModalWindow';
 import RecordsCounter from '../RecordsCounter/RecordsCounter';
 
 //Gravitu IU components
@@ -180,57 +181,16 @@ export default function Records({
         {isAdminMode && <Button onClick={openEmptyOrder}>Добавить заявку</Button>}
       </div>
 
-      <Modal open={isModalOpened} onClose={closeOrder}>
-        <div className="records__modal">
-          <TextInput label={Number} disabled={true} value={openedOrder?.number?.toString()} />
-          <TextInput label={DateTime} disabled={true} value={getDate(openedOrder?.datetime)} />
-          <TextInput
-            label={ClientsFirm}
-            value={openedOrder?.clientsFirm}
-            name="clientsFirm"
-            onChange={handleChange}
-          />
-          <TextInput
-            label={Shipper}
-            value={openedOrder?.shipperName}
-            name="shipperName"
-            onChange={handleChange}
-          />
-          <TextInput
-            label={ShipperNumber}
-            value={openedOrder?.shipperPhone}
-            name="shipperPhone"
-            onChange={handleChange}
-          />
-          <TextInput
-            label={Comment}
-            value={openedOrder?.comment}
-            name="comment"
-            onChange={handleChange}
-          />
-          <Select
-            placeholder={openedOrder?.status}
-            onUpdate={setNewRecordStatus}
-            options={[
-              { content: 'новая', value: 'новая' },
-              { content: 'в процессе', value: 'в процессе' },
-              { content: 'завершенная', value: 'завершенная' }
-            ]}
-          />
-          <TextInput
-            label={AtiCode}
-            value={openedOrder?.atiCode?.toString()}
-            name="atiCode"
-            onChange={handleChange}
-          />
-          <Button view="outlined-warning" onClick={closeOrder}>
-            Закрыть
-          </Button>
-          <Button view="outlined-success" onClick={!isNewOrder ? saveRecord : addNewRecord}>
-            {`${!isNewOrder ? 'Сохранить' : 'Добавить'}`}
-          </Button>
-        </div>
-      </Modal>
+      <ModalWindow
+        isModalOpened={isModalOpened}
+        closeOrder={closeOrder}
+        openedOrder={openedOrder}
+        handleChange={handleChange}
+        setNewRecordStatus={setNewRecordStatus}
+        isNewOrder={isNewOrder}
+        saveRecord={saveRecord}
+        addNewRecord={addNewRecord}
+      />
     </div>
   );
 }

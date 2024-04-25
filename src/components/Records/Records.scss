@@ -12,11 +12,4 @@
     display: flex;
     justify-content: space-between;
   }
-
-  &__modal {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    padding: 30px;
-    gap: 10px;
-  }
 }
