@@ -1,7 +1,59 @@
 .modal-window {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-
+  grid-template-rows: repeat(4, 1fr) 2fr repeat(2, 1fr);
+  grid-template-areas:
+    'number date-time'
+    'clients-firm clients-firm'
+    'shipper-name shipper-name'
+    'shipper-phone shipper-phone'
+    'comment comment'
+    'status ati-code'
+    'buttons buttons';
   padding: 30px;
   gap: 10px;
+
+  &__number {
+    grid-area: number;
+    width: 100px;
+  }
+
+  &__date-time {
+    grid-area: date-time;
+  }
+
+  &__clients-firm {
+    grid-area: clients-firm;
+  }
+
+  &__shipper-name {
+    grid-area: shipper-name;
+  }
+
+  &__shipper-phone {
+    grid-area: shipper-phone;
+  }
+
+  &__comment {
+    grid-area: comment;
+  }
+
+  &__status {
+    grid-area: status;
+  }
+
+  &__ati-code {
+    grid-area: ati-code;
+  }
+
+  &__buttons {
+    grid-area: buttons;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  & input {
+    text-align: right;
+  }
 }

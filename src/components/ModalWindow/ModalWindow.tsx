@@ -1,7 +1,7 @@
 import './ModalWindow.scss';
 
 // Gravity UI components
-import { Button, Modal, Select, TextInput } from '@gravity-ui/uikit';
+import { Button, Modal, Select, TextArea, TextInput } from '@gravity-ui/uikit';
 
 // Utils and variables
 import { getDate } from '../../utils/getDate';
@@ -23,7 +23,7 @@ export default function ModalWindow({
   isModalOpened: boolean;
   closeOrder: () => void;
   openedOrder: RecordElementType;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   setNewRecordStatus: (event: any) => void;
   isNewOrder: boolean;
   saveRecord: () => void;
@@ -34,33 +34,52 @@ export default function ModalWindow({
   return (
     <Modal open={isModalOpened} onClose={closeOrder}>
       <div className="modal-window">
-        <TextInput label={Number} disabled={true} value={openedOrder?.number?.toString()} />
-        <TextInput label={DateTime} disabled={true} value={getDate(openedOrder?.datetime)} />
         <TextInput
+          className="modal-window__number"
+          label={Number}
+          disabled={true}
+          value={openedOrder?.number?.toString()}
+        />
+        <TextInput
+          className="modal-window__date-time"
+          label={DateTime}
+          disabled={true}
+          value={getDate(openedOrder?.datetime)}
+        />
+        <TextInput
+          className="modal-window__clients-firm"
           label={ClientsFirm}
           value={openedOrder?.clientsFirm}
           name="clientsFirm"
           onChange={handleChange}
         />
         <TextInput
+          className="modal-window__shipper-name"
           label={Shipper}
           value={openedOrder?.shipperName}
           name="shipperName"
           onChange={handleChange}
         />
         <TextInput
+          className="modal-window__shipper-phone"
           label={ShipperNumber}
           value={openedOrder?.shipperPhone}
           name="shipperPhone"
           onChange={handleChange}
         />
-        <TextInput
-          label={Comment}
-          value={openedOrder?.comment}
-          name="comment"
-          onChange={handleChange}
-        />
+        <div className="modal-window__comment">
+          <span>Комментарий:</span>
+          <TextArea
+            // label={Comment}
+            rows={2}
+            value={openedOrder?.comment}
+            name="comment"
+            onChange={handleChange}
+          />
+        </div>
+
         <Select
+          className="modal-window__status"
           placeholder={openedOrder?.status}
           onUpdate={setNewRecordStatus}
           options={[
@@ -70,17 +89,24 @@ export default function ModalWindow({
           ]}
         />
         <TextInput
+          className="modal-window__ati-code"
           label={AtiCode}
           value={openedOrder?.atiCode?.toString()}
           name="atiCode"
           onChange={handleChange}
         />
-        <Button view="outlined-warning" onClick={closeOrder}>
-          Закрыть
-        </Button>
-        <Button view="outlined-success" onClick={!isNewOrder ? saveRecord : addNewRecord}>
-          {`${!isNewOrder ? 'Сохранить' : 'Добавить'}`}
-        </Button>
+        <div className="modal-window__buttons">
+          <Button view="outlined-warning" onClick={closeOrder}>
+            Закрыть
+          </Button>
+          <Button
+            view="outlined-success"
+            width="max"
+            onClick={!isNewOrder ? saveRecord : addNewRecord}
+          >
+            {`${!isNewOrder ? 'Сохранить' : 'Добавить'}`}
+          </Button>
+        </div>
       </div>
     </Modal>
   );
