@@ -8,7 +8,7 @@ import ModalWindow from '../ModalWindow/ModalWindow';
 import RecordsCounter from '../RecordsCounter/RecordsCounter';
 
 // Gravitu IU components
-import { Button, Icon, Link, Table, TableDataItem, withTableActions } from '@gravity-ui/uikit';
+import { Button, Link, Table, TableDataItem, withTableActions } from '@gravity-ui/uikit';
 
 // Utils
 import { getDate } from '../../utils/getDate';
@@ -22,7 +22,6 @@ import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
 
 import { CirclePlus } from '@gravity-ui/icons';
-import Person from '@gravity-ui/icons';
 
 export default function Records({
   records,
