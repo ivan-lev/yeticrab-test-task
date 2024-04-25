@@ -20,6 +20,7 @@ import { BUTTON_NAMES } from '../../variables/buttonNames';
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
+import { RecordStatusEnum } from '../../types/RecordStatus';
 
 import { CirclePlus } from '@gravity-ui/icons';
 
@@ -115,6 +116,7 @@ export default function Records({
   const openEmptyOrder = () => {
     setIsNewOrder(true);
     const currentRecord = emptyOrderElement;
+    currentRecord.status = RecordStatusEnum.new;
     setOpenedOrder(currentRecord);
     setIsModalOpened(true);
   };
