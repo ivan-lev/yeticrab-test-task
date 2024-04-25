@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 // Gravity UI components
 import { Button } from '@gravity-ui/uikit';
+import { Person, PersonPlus } from '@gravity-ui/icons';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
@@ -22,22 +23,18 @@ export default function Header({
   return (
     <header className="header">
       {isAdminMode ? (
-        <Button
-          className="header__button"
-          view="outlined-success"
-          size="l"
-          onClick={changeAdminMode}
-        >
-          {BUTTON_NAMES.USER_MODE}
+        <Button view="outlined-success" size="l" onClick={changeAdminMode}>
+          <span className="button-content">
+            <Person />
+            {BUTTON_NAMES.USER_MODE}
+          </span>
         </Button>
       ) : (
-        <Button
-          className="header__button"
-          view="outlined-action"
-          size="l"
-          onClick={changeAdminMode}
-        >
-          {BUTTON_NAMES.ADMIN_MODE}
+        <Button view="outlined-action" size="l" onClick={changeAdminMode}>
+          <span className="button-content">
+            <PersonPlus />
+            {BUTTON_NAMES.ADMIN_MODE}
+          </span>
         </Button>
       )}
     </header>

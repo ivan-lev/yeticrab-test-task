@@ -2,6 +2,7 @@ import './ModalWindow.scss';
 
 // Gravity UI components
 import { Button, Modal, Select, TextArea, TextInput } from '@gravity-ui/uikit';
+import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
 
 // Utils
 import { getDate } from '../../utils/getDate';
@@ -97,15 +98,29 @@ export default function ModalWindow({
           onChange={handleChange}
         />
         <div className="modal-window__buttons">
-          <Button view="outlined-warning" onClick={closeOrder}>
-            Закрыть
+          <Button className="modal-window__button" view="outlined-warning" onClick={closeOrder}>
+            <span className="button-content">
+              <CircleXmark />
+              Закрыть
+            </span>
           </Button>
           <Button
+            className="button modal-window__button"
             view="outlined-success"
             width="max"
             onClick={!isNewOrder ? saveRecord : addNewRecord}
           >
-            {`${!isNewOrder ? 'Сохранить' : 'Добавить'}`}
+            {!isNewOrder ? (
+              <span className="button-content">
+                <FloppyDisk />
+                Сохранить
+              </span>
+            ) : (
+              <span className="button-content">
+                <CirclePlus />
+                Добавить
+              </span>
+            )}
           </Button>
         </div>
       </div>
