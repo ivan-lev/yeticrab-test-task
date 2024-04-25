@@ -8,16 +8,7 @@ import ModalWindow from '../ModalWindow/ModalWindow';
 import RecordsCounter from '../RecordsCounter/RecordsCounter';
 
 //Gravitu IU components
-import {
-  Button,
-  Link,
-  Modal,
-  Table,
-  TableDataItem,
-  TextInput,
-  Select,
-  withTableActions
-} from '@gravity-ui/uikit';
+import { Button, Link, Table, TableDataItem, withTableActions } from '@gravity-ui/uikit';
 
 //utils and variables
 import { getDate } from '../../utils/getDate';
@@ -129,7 +120,7 @@ export default function Records({
     isNewOrder && setIsNewOrder(false);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value, name } = event.target;
     setOpenedOrder({ ...openedOrder, [name]: value });
   };
