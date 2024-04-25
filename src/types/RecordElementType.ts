@@ -1,6 +1,4 @@
-// import { RecordStatus, RecordStatusEnum } from './RecordStatus';
-
-import { RecordStatus } from './RecordStatus';
+import { RecordStatusEnum } from './RecordStatus';
 
 export interface RecordElementType {
   number: number | undefined;
@@ -9,6 +7,6 @@ export interface RecordElementType {
   shipperName: string | undefined;
   shipperPhone: string | undefined;
   comment?: string | undefined;
-  status: RecordStatus | undefined;
+  status: RecordStatusEnum | undefined;
   atiCode: number | undefined;
 }

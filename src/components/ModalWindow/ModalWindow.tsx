@@ -9,6 +9,7 @@ import { getDate } from '../../utils/getDate';
 // Types and interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
+import { RecordStatusEnum } from '../../types/RecordStatus';
 
 export default function ModalWindow({
   isModalOpened,
@@ -31,6 +32,12 @@ export default function ModalWindow({
 }): JSX.Element {
   const { Number, DateTime, ClientsFirm, Shipper, ShipperNumber, Comment, Status, AtiCode } =
     tableColumnsEnum;
+
+  // make array of options objects to show in available statuses
+  const statusOptionsArray = Object.values(RecordStatusEnum).map(status => {
+    return { content: status, value: status };
+  });
+
   return (
     <Modal open={isModalOpened} onClose={closeOrder}>
       <div className="modal-window">
@@ -68,26 +75,25 @@ export default function ModalWindow({
           onChange={handleChange}
         />
         <div className="modal-window__comment">
-          <span>Комментарий:</span>
-          <TextArea
-            // label={Comment}
-            rows={2}
-            value={openedOrder?.comment}
-            name="comment"
-            onChange={handleChange}
+          <span>{Comment}:</span>
+          <TextArea rows={2} value={openedOrder?.comment} name="comment" onChange={handleChange} />
+        </div>
+        <div>
+          {Status}
+          <span>: </span>
+          <Select
+            className="modal-window__status"
+            placeholder={openedOrder?.status}
+            onUpdate={setNewRecordStatus}
+            options={statusOptionsArray}
+            // options={[
+            //   { content: 'новая', value: 'новая' },
+            //   { content: 'в процессе', value: 'в процессе' },
+            //   { content: 'завершенная', value: 'завершенная' }
+            // ]}
           />
         </div>
 
-        <Select
-          className="modal-window__status"
-          placeholder={openedOrder?.status}
-          onUpdate={setNewRecordStatus}
-          options={[
-            { content: 'новая', value: 'новая' },
-            { content: 'в процессе', value: 'в процессе' },
-            { content: 'завершенная', value: 'завершенная' }
-          ]}
-        />
         <TextInput
           className="modal-window__ati-code"
           label={AtiCode}
