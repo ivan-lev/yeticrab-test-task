@@ -1,6 +1,6 @@
 import './Records.scss';
 
-//Рooks
+//Hooks
 import { useState, SetStateAction, Dispatch } from 'react';
 
 //Components
@@ -133,12 +133,14 @@ export default function Records({
   };
 
   const saveRecord = () => {
-    const newRecords = records.map(record => {
+    let newRecords: RecordElementType[] = [];
+
+    records.forEach(record => {
       if (record.number !== openedOrder.number) {
-        return record;
+        newRecords.push(record);
       }
       if (record.number === openedOrder.number) {
-        return openedOrder;
+        newRecords.push(openedOrder);
       }
     });
     setRecords(newRecords);
