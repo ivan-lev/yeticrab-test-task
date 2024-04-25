@@ -6,6 +6,9 @@ import { Dispatch, SetStateAction } from 'react';
 // Gravity UI components
 import { Button } from '@gravity-ui/uikit';
 
+// Variables
+import { BUTTON_NAMES } from '../../variables/buttonNames';
+
 export default function Header({
   isAdminMode,
   setIsAdminMode
@@ -25,7 +28,7 @@ export default function Header({
           size="l"
           onClick={changeAdminMode}
         >
-          Перейти в режим просмотра
+          {BUTTON_NAMES.USER_MODE}
         </Button>
       ) : (
         <Button
@@ -34,7 +37,7 @@ export default function Header({
           size="l"
           onClick={changeAdminMode}
         >
-          Перейти в режим администратора
+          {BUTTON_NAMES.ADMIN_MODE}
         </Button>
       )}
     </header>

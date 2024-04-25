@@ -14,6 +14,9 @@ import { Button, Link, Table, TableDataItem, withTableActions } from '@gravity-u
 import { getDate } from '../../utils/getDate';
 import { getAtiLink } from '../../utils/getAtiLink';
 
+// Variables
+import { BUTTON_NAMES } from '../../variables/buttonNames';
+
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { RecordElementType } from '../../types/RecordElementType';
@@ -84,14 +87,14 @@ export default function Records({
     return isAdminMode
       ? [
           {
-            text: 'Редактировать',
+            text: BUTTON_NAMES.EDIT_ORDER,
             handler: (item: TableDataItem) => {
               openOrder(item);
             },
             theme: 'normal' as const
           },
           {
-            text: 'Удалить',
+            text: BUTTON_NAMES.DELETE_ORDER,
             handler: (item: TableDataItem) => {
               deleteRecord(item);
             },
@@ -169,7 +172,7 @@ export default function Records({
       />
       <div className="records__bottom">
         <RecordsCounter amount={records?.length || 0} />
-        {isAdminMode && <Button onClick={openEmptyOrder}>Добавить заявку</Button>}
+        {isAdminMode && <Button onClick={openEmptyOrder}>{BUTTON_NAMES.ADD_ORDER}</Button>}
       </div>
 
       <ModalWindow
