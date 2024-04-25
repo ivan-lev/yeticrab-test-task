@@ -78,11 +78,14 @@ export default function Records({
       [ShipperNumber]: record.shipperPhone,
       [Comment]: record.comment,
       [Status]: record.status,
-      [AtiCode]: (
-        <Link href={getAtiLink(record.atiCode)} target="_blank">
-          {record.atiCode}
-        </Link>
-      )
+      [AtiCode]:
+        record.atiCode === undefined ? (
+          'нет кода'
+        ) : (
+          <Link href={getAtiLink(record.atiCode)} target="_blank">
+            {record.atiCode}
+          </Link>
+        )
     };
   });
 
