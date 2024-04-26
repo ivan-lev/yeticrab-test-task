@@ -1,4 +1,4 @@
-export interface RecordElementType {
+export interface OrderElementType {
   number: number | undefined;
   datetime: string | undefined; // date time string format with toISOString() method
   clientsFirm: string | undefined;

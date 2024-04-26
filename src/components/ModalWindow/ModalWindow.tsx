@@ -9,41 +9,41 @@ import { getDate } from '../../utils/getDate';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
-import { RecordElementType } from '../../types/RecordElementType';
-import { RecordStatusEnum } from '../../types/RecordStatus';
+import { OrderElementType } from '../../types/OrderElementType';
+import { OrderStatusEnum } from '../../types/OrderStatus';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
 
 export default function ModalWindow({
   isModalOpened,
-  closeOrder,
+  closeModal,
   openedOrder,
   handleChange,
-  setNewRecordStatus,
+  setNewOrderStatus,
   isNewOrder,
-  saveRecord,
-  addNewRecord
+  saveOrder,
+  addNewOrder
 }: {
   isModalOpened: boolean;
-  closeOrder: () => void;
-  openedOrder: RecordElementType;
+  closeModal: () => void;
+  openedOrder: OrderElementType;
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  setNewRecordStatus: (event: any) => void;
+  setNewOrderStatus: (event: any) => void;
   isNewOrder: boolean;
-  saveRecord: () => void;
-  addNewRecord: () => void;
+  saveOrder: () => void;
+  addNewOrder: () => void;
 }): JSX.Element {
   const { Number, DateTime, ClientsFirm, Shipper, ShipperNumber, Comment, Status, AtiCode } =
     tableColumnsEnum;
 
   // make array of options objects to show in available statuses
-  const statusOptionsArray = Object.values(RecordStatusEnum).map(status => {
+  const statusOptionsArray = Object.values(OrderStatusEnum).map(status => {
     return { content: status, value: status };
   });
 
   return (
-    <Modal open={isModalOpened} onClose={closeOrder}>
+    <Modal open={isModalOpened} onClose={closeModal}>
       <div className="modal-window">
         <TextInput
           className="modal-window__number"
@@ -88,7 +88,7 @@ export default function ModalWindow({
           <Select
             className="modal-window__status"
             placeholder={openedOrder?.status}
-            onUpdate={setNewRecordStatus}
+            onUpdate={setNewOrderStatus}
             options={statusOptionsArray}
           />
         </div>
@@ -101,7 +101,7 @@ export default function ModalWindow({
           onChange={handleChange}
         />
         <div className="modal-window__buttons">
-          <Button className="modal-window__button" view="outlined-warning" onClick={closeOrder}>
+          <Button className="modal-window__button" view="outlined-warning" onClick={closeModal}>
             <span className="button-content">
               <CircleXmark />
               {BUTTON_NAMES.CLOSE}
@@ -111,7 +111,7 @@ export default function ModalWindow({
             className="button modal-window__button"
             view="outlined-success"
             width="max"
-            onClick={!isNewOrder ? saveRecord : addNewRecord}
+            onClick={!isNewOrder ? saveOrder : addNewOrder}
           >
             {!isNewOrder ? (
               <span className="button-content">

@@ -1,11 +1,11 @@
-import './Records.scss';
+import './Orders.scss';
 
 // Hooks
 import { useState, SetStateAction, Dispatch } from 'react';
 
 // Components
 import ModalWindow from '../ModalWindow/ModalWindow';
-import RecordsCounter from '../RecordsCounter/RecordsCounter';
+import OrdersCounter from '../OrdersCounter/OrdersCounter';
 
 // Gravitu IU components
 import { Button, Link, Table, TableDataItem, withTableActions } from '@gravity-ui/uikit';
@@ -19,25 +19,25 @@ import { BUTTON_NAMES } from '../../variables/buttonNames';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
-import { RecordElementType } from '../../types/RecordElementType';
-import { RecordStatusEnum } from '../../types/RecordStatus';
+import { OrderElementType } from '../../types/OrderElementType';
+import { OrderStatusEnum } from '../../types/OrderStatus';
 
 import { CirclePlus } from '@gravity-ui/icons';
 
-export default function Records({
-  records,
-  setRecords,
+export default function Orders({
+  orders,
+  setOrders,
   isAdminMode,
-  latestRecordNumber,
-  setLatestRecordNumber
+  latestOrderNumber,
+  setLatestOrderNumber
 }: {
-  records: RecordElementType[];
-  setRecords: Dispatch<SetStateAction<RecordElementType[]>>;
+  orders: OrderElementType[];
+  setOrders: Dispatch<SetStateAction<OrderElementType[]>>;
   isAdminMode: boolean;
-  latestRecordNumber: number;
-  setLatestRecordNumber: Dispatch<SetStateAction<number>>;
+  latestOrderNumber: number;
+  setLatestOrderNumber: Dispatch<SetStateAction<number>>;
 }): JSX.Element {
-  const emptyOrderElement: RecordElementType = {
+  const emptyOrderElement: OrderElementType = {
     number: undefined,
     datetime: undefined,
     clientsFirm: undefined,
@@ -49,7 +49,7 @@ export default function Records({
   };
 
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
-  const [openedOrder, setOpenedOrder] = useState<RecordElementType>(emptyOrderElement);
+  const [openedOrder, setOpenedOrder] = useState<OrderElementType>(emptyOrderElement);
   const [isNewOrder, setIsNewOrder] = useState<boolean>(false);
 
   const MyTable = withTableActions(Table);
@@ -68,7 +68,7 @@ export default function Records({
     { id: AtiCode }
   ];
 
-  const data = records.map(record => {
+  const data = orders.map(record => {
     return {
       id: record.number,
       [Number]: record.number,
@@ -95,14 +95,14 @@ export default function Records({
           {
             text: BUTTON_NAMES.EDIT_ORDER,
             handler: (item: TableDataItem) => {
-              openOrder(item);
+              openOrderInModal(item);
             },
             theme: 'normal' as const
           },
           {
             text: BUTTON_NAMES.DELETE_ORDER,
             handler: (item: TableDataItem) => {
-              deleteRecord(item);
+              deleteOrder(item);
             },
             theme: 'danger' as const
           }
@@ -110,21 +110,21 @@ export default function Records({
       : [];
   };
 
-  const openOrder = (item: TableDataItem) => {
-    const currentRecord = records.find(record => record.number === item.id);
-    setOpenedOrder(currentRecord ?? emptyOrderElement);
+  const openOrderInModal = (item: TableDataItem) => {
+    const currentOrder = orders.find(record => record.number === item.id);
+    setOpenedOrder(currentOrder ?? emptyOrderElement);
     setIsModalOpened(true);
   };
 
-  const openEmptyOrder = () => {
+  const openEmptyOrderInModal = () => {
     setIsNewOrder(true);
-    const currentRecord = emptyOrderElement;
-    currentRecord.status = RecordStatusEnum.new;
-    setOpenedOrder(currentRecord);
+    const currentOrder = emptyOrderElement;
+    currentOrder.status = OrderStatusEnum.new;
+    setOpenedOrder(currentOrder);
     setIsModalOpened(true);
   };
 
-  const closeOrder = () => {
+  const closeModal = () => {
     setIsModalOpened(false);
     setOpenedOrder(emptyOrderElement);
     isNewOrder && setIsNewOrder(false);
@@ -135,52 +135,52 @@ export default function Records({
     setOpenedOrder({ ...openedOrder, [name]: value });
   };
 
-  const saveRecord = () => {
-    let newRecords: RecordElementType[] = [];
+  const saveOrder = () => {
+    let newOrders: OrderElementType[] = [];
 
-    records.forEach(record => {
+    orders.forEach(record => {
       if (record.number !== openedOrder.number) {
-        newRecords.push(record);
+        newOrders.push(record);
       }
       if (record.number === openedOrder.number) {
-        newRecords.push(openedOrder);
+        newOrders.push(openedOrder);
       }
     });
-    setRecords(newRecords);
-    closeOrder();
+    setOrders(newOrders);
+    closeModal();
   };
 
-  const addNewRecord = () => {
-    openedOrder.number = latestRecordNumber;
+  const addNewOrder = () => {
+    openedOrder.number = latestOrderNumber;
     const currentTime = new Date();
     openedOrder.datetime = currentTime.toISOString();
-    setLatestRecordNumber(latestRecordNumber + 1);
-    const newRecords = [...records, openedOrder];
-    setRecords(newRecords);
-    closeOrder();
+    setLatestOrderNumber(latestOrderNumber + 1);
+    const newOrders = [...orders, openedOrder];
+    setOrders(newOrders);
+    closeModal();
   };
 
-  const deleteRecord = (item: TableDataItem) => {
-    const newRecords = records.filter(record => record.number !== item.id);
-    setRecords(newRecords);
+  const deleteOrder = (item: TableDataItem) => {
+    const newOrders = orders.filter(record => record.number !== item.id);
+    setOrders(newOrders);
   };
 
-  const setNewRecordStatus = (event: any): void => {
+  const setNewOrderStatus = (event: any): void => {
     setOpenedOrder({ ...openedOrder, status: event[0] });
   };
 
   return (
-    <div className="records">
+    <div className="orders">
       <MyTable
-        className="records__table"
+        className="orders__table"
         data={data}
         columns={columns}
         getRowActions={getRowActions}
       />
-      <div className="records__bottom">
-        <RecordsCounter amount={records?.length || 0} />
+      <div className="orders__bottom">
+        <OrdersCounter amount={orders?.length || 0} />
         {isAdminMode && (
-          <Button onClick={openEmptyOrder}>
+          <Button onClick={openEmptyOrderInModal}>
             <span className="button-content">
               <CirclePlus />
               {BUTTON_NAMES.ADD_ORDER}
@@ -191,13 +191,13 @@ export default function Records({
 
       <ModalWindow
         isModalOpened={isModalOpened}
-        closeOrder={closeOrder}
+        closeModal={closeModal}
         openedOrder={openedOrder}
         handleChange={handleChange}
-        setNewRecordStatus={setNewRecordStatus}
+        setNewOrderStatus={setNewOrderStatus}
         isNewOrder={isNewOrder}
-        saveRecord={saveRecord}
-        addNewRecord={addNewRecord}
+        saveOrder={saveOrder}
+        addNewOrder={addNewOrder}
       />
     </div>
   );

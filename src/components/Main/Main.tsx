@@ -4,36 +4,36 @@ import './Main.scss';
 import { Dispatch, SetStateAction } from 'react';
 
 // Components
-import Records from '../Records/Records';
+import Orders from '../Orders/Orders';
 
 // Gravity UI components
 import { Text } from '@gravity-ui/uikit';
 
 // Types, interfaces
-import { RecordElementType } from '../../types/RecordElementType';
+import { OrderElementType } from '../../types/OrderElementType';
 
 export default function Main({
-  records,
-  setRecords,
+  orders,
+  setOrders,
   isAdminMode,
-  latestRecordNumber,
-  setLatestRecordNumber
+  latestOrderNumber,
+  setLatestOrderNumber
 }: {
-  records: RecordElementType[];
-  setRecords: Dispatch<SetStateAction<RecordElementType[]>>;
+  orders: OrderElementType[];
+  setOrders: Dispatch<SetStateAction<OrderElementType[]>>;
   isAdminMode: boolean;
-  latestRecordNumber: number;
-  setLatestRecordNumber: Dispatch<SetStateAction<number>>;
+  latestOrderNumber: number;
+  setLatestOrderNumber: Dispatch<SetStateAction<number>>;
 }): JSX.Element {
   return (
     <main className="content">
       <Text variant="header-1">Текущие заявки</Text>
-      <Records
-        records={records}
-        setRecords={setRecords}
+      <Orders
+        orders={orders}
+        setOrders={setOrders}
         isAdminMode={isAdminMode}
-        latestRecordNumber={latestRecordNumber}
-        setLatestRecordNumber={setLatestRecordNumber}
+        latestOrderNumber={latestOrderNumber}
+        setLatestOrderNumber={setLatestOrderNumber}
       />
     </main>
   );

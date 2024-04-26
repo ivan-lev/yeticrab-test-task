@@ -1,6 +1,6 @@
-import { RecordElementType } from '../types/RecordElementType';
+import { OrderElementType } from '../types/OrderElementType';
 
-export const templateRecords: RecordElementType[] = [
+export const templateOrders: OrderElementType[] = [
   {
     number: 121,
     datetime: '2024-04-21T17:45:23.123Z',

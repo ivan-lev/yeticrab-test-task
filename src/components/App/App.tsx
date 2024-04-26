@@ -9,24 +9,24 @@ import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 
 // Variables,
-import { templateRecords } from '../../variables/templateRecords';
+import { templateOrders } from '../../variables/templateOrders';
 
 // Types, interfaces
-import { RecordElementType } from '../../types/RecordElementType';
+import { OrderElementType } from '../../types/OrderElementType';
 
 export default function App() {
-  const [records, setRecords] = useState<RecordElementType[]>(templateRecords);
-  const [latestRecordNumber, setLatestRecordNumber] = useState<number>(129);
+  const [orders, setOrders] = useState<OrderElementType[]>(templateOrders);
+  const [latestOrderNumber, setLatestOrderNumber] = useState<number>(129);
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   return (
     <>
       <Header isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode}></Header>
       <Main
-        records={records}
-        setRecords={setRecords}
+        orders={orders}
+        setOrders={setOrders}
         isAdminMode={isAdminMode}
-        latestRecordNumber={latestRecordNumber}
-        setLatestRecordNumber={setLatestRecordNumber}
+        latestOrderNumber={latestOrderNumber}
+        setLatestOrderNumber={setLatestOrderNumber}
       />
       <Footer />
     </>
