@@ -13,6 +13,7 @@ import { Button, Link, Table, TableDataItem, withTableActions } from '@gravity-u
 // Utils
 import { getDate } from '../../utils/getDate';
 import { getAtiLink } from '../../utils/getAtiLink';
+import { deleteOrder } from '../../utils/orders/deleteOrder';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
@@ -102,7 +103,7 @@ export default function Orders({
           {
             text: BUTTON_NAMES.DELETE_ORDER,
             handler: (item: TableDataItem) => {
-              deleteOrder(item);
+              deleteOrder(item, orders, setOrders);
             },
             theme: 'danger' as const
           }
@@ -158,11 +159,6 @@ export default function Orders({
     const newOrders = [...orders, openedOrder];
     setOrders(newOrders);
     closeModal();
-  };
-
-  const deleteOrder = (item: TableDataItem) => {
-    const newOrders = orders.filter(record => record.number !== item.id);
-    setOrders(newOrders);
   };
 
   const setNewOrderStatus = (event: any): void => {
