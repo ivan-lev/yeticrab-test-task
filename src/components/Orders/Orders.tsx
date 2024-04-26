@@ -9,11 +9,13 @@ import OrdersCounter from '../OrdersCounter/OrdersCounter';
 
 // Gravitu IU components
 import { Button, Link, Table, TableDataItem, withTableActions } from '@gravity-ui/uikit';
+import { CirclePlus } from '@gravity-ui/icons';
 
 // Utils
 import { getDate } from '../../utils/getDate';
 import { getAtiLink } from '../../utils/getAtiLink';
 import { deleteOrder } from '../../utils/orders/deleteOrder';
+import { editOrder } from '../../utils/orders/editOrder';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
@@ -22,8 +24,6 @@ import { BUTTON_NAMES } from '../../variables/buttonNames';
 import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { OrderElementType } from '../../types/OrderElementType';
 import { OrderStatusEnum } from '../../types/OrderStatus';
-
-import { CirclePlus } from '@gravity-ui/icons';
 
 export default function Orders({
   orders,
@@ -136,18 +136,8 @@ export default function Orders({
     setOpenedOrder({ ...openedOrder, [name]: value });
   };
 
-  const saveOrder = () => {
-    let newOrders: OrderElementType[] = [];
-
-    orders.forEach(record => {
-      if (record.number !== openedOrder.number) {
-        newOrders.push(record);
-      }
-      if (record.number === openedOrder.number) {
-        newOrders.push(openedOrder);
-      }
-    });
-    setOrders(newOrders);
+  const handleEditOrder = () => {
+    editOrder(openedOrder, orders, setOrders);
     closeModal();
   };
 
@@ -192,7 +182,7 @@ export default function Orders({
         handleChange={handleChange}
         setNewOrderStatus={setNewOrderStatus}
         isNewOrder={isNewOrder}
-        saveOrder={saveOrder}
+        saveOrder={handleEditOrder}
         addNewOrder={addNewOrder}
       />
     </div>
