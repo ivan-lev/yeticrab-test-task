@@ -16,6 +16,7 @@ import { getDate } from '../../utils/getDate';
 import { getAtiLink } from '../../utils/getAtiLink';
 import { deleteOrder } from '../../utils/orders/deleteOrder';
 import { editOrder } from '../../utils/orders/editOrder';
+import { addNewOrder } from '../../utils/orders/addNewOrder';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
@@ -141,13 +142,8 @@ export default function Orders({
     closeModal();
   };
 
-  const addNewOrder = () => {
-    openedOrder.number = latestOrderNumber;
-    const currentTime = new Date();
-    openedOrder.datetime = currentTime.toISOString();
-    setLatestOrderNumber(latestOrderNumber + 1);
-    const newOrders = [...orders, openedOrder];
-    setOrders(newOrders);
+  const handleAddNewOrder = () => {
+    addNewOrder(openedOrder, orders, setOrders, latestOrderNumber, setLatestOrderNumber);
     closeModal();
   };
 
@@ -183,7 +179,7 @@ export default function Orders({
         setNewOrderStatus={setNewOrderStatus}
         isNewOrder={isNewOrder}
         saveOrder={handleEditOrder}
-        addNewOrder={addNewOrder}
+        addNewOrder={handleAddNewOrder}
       />
     </div>
   );
