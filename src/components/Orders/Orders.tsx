@@ -112,13 +112,13 @@ export default function Orders({
       : [];
   };
 
-  const openOrderInModal = (item: TableDataItem) => {
+  const openOrderInModal = (item: TableDataItem): void => {
     const currentOrder = orders.find(record => record.number === item.id);
     setOpenedOrder(currentOrder ?? emptyOrderElement);
     setIsModalOpened(true);
   };
 
-  const openEmptyOrderInModal = () => {
+  const openEmptyOrderInModal = (): void => {
     setIsNewOrder(true);
     const currentOrder = emptyOrderElement;
     currentOrder.status = OrderStatusEnum.new;
@@ -126,23 +126,23 @@ export default function Orders({
     setIsModalOpened(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setIsModalOpened(false);
     setOpenedOrder(emptyOrderElement);
     isNewOrder && setIsNewOrder(false);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { value, name } = event.target;
     setOpenedOrder({ ...openedOrder, [name]: value });
   };
 
-  const handleEditOrder = () => {
+  const handleEditOrder = (): void => {
     editOrder(openedOrder, orders, setOrders);
     closeModal();
   };
 
-  const handleAddNewOrder = () => {
+  const handleAddNewOrder = (): void => {
     addNewOrder(openedOrder, orders, setOrders, latestOrderNumber, setLatestOrderNumber);
     closeModal();
   };

@@ -17,7 +17,7 @@ export default function Header({
   isAdminMode: boolean;
   setIsAdminMode: Dispatch<SetStateAction<boolean>>;
 }): JSX.Element {
-  const changeAdminMode = () => {
+  const changeAdminMode = (): void => {
     setIsAdminMode(!isAdminMode);
   };
   return (
