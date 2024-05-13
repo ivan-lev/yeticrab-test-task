@@ -61,7 +61,7 @@ export default function Orders({
   // this function is checking inputs via validators,
   // set the error message
   // and return boolean error status
-  const validityCheck = (openenOrder: OrderElementType): boolean => {
+  const validityCheck = (openedOrder: OrderElementType): boolean => {
     const { clientsFirm, shipperName, shipperPhone, atiCode } = openedOrder;
     const errorsArray = [];
     errorsArray.push(validators.clientsFirmValidator(clientsFirm || ''));
