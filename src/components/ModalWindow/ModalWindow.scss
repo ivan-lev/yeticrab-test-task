@@ -9,7 +9,8 @@
     'shipper-phone shipper-phone'
     'comment comment'
     'status ati-code'
-    'buttons buttons';
+    'buttons buttons'
+    'error error';
   padding: 30px;
   gap: 10px;
 
@@ -51,6 +52,15 @@
     display: flex;
     gap: 10px;
     justify-content: space-between;
+  }
+
+  &__error {
+    grid-area: error;
+    text-transform: lowercase;
+  }
+
+  &__error::first-letter {
+    text-transform: capitalize;
   }
 
   & input {

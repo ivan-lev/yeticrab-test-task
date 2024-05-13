@@ -17,6 +17,7 @@ import { getAtiLink } from '../../utils/getAtiLink';
 import { deleteOrder } from '../../utils/orders/deleteOrder';
 import { editOrder } from '../../utils/orders/editOrder';
 import { addNewOrder } from '../../utils/orders/addNewOrder';
+import { validators } from '../../utils/validator';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
@@ -53,6 +54,39 @@ export default function Orders({
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
   const [openedOrder, setOpenedOrder] = useState<OrderElementType>(emptyOrderElement);
   const [isNewOrder, setIsNewOrder] = useState<boolean>(false);
+
+  const [isInputsValid, setIsInputsValid] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  // this function is checking inputs via validators,
+  // set the error message
+  // and return boolean error status
+  const validityCheck = (openenOrder: OrderElementType): boolean => {
+    const { clientsFirm, shipperName, shipperPhone, atiCode } = openedOrder;
+    const errorsArray = [];
+    errorsArray.push(validators.clientsFirmValidator(clientsFirm || ''));
+    errorsArray.push(validators.shipperNameValidator(shipperName || ''));
+    errorsArray.push(validators.shipperPhoneValidator(shipperPhone || ''));
+    errorsArray.push(validators.atiCodeValidator(atiCode));
+
+    let errorMessages: string[] = [];
+    errorsArray.forEach(error => {
+      if (error.errorMessage.length !== 0) {
+        errorMessages.push(error.errorMessage);
+      }
+    });
+    setErrorMessage(errorMessages.join(', '));
+
+    let isErrors: boolean = errorsArray.some(error => error.isValid === false);
+    if (isErrors) {
+      setIsInputsValid(false);
+    } else {
+      setIsInputsValid(true);
+    }
+    // console.log('isErrors:', isErrors);
+    // console.log(errorsArray);
+    return isErrors;
+  };
 
   const MyTable = withTableActions(Table);
 
@@ -113,12 +147,16 @@ export default function Orders({
   };
 
   const openOrderInModal = (item: TableDataItem): void => {
+    setErrorMessage('');
+    setIsInputsValid(false);
     const currentOrder = orders.find(record => record.number === item.id);
     setOpenedOrder(currentOrder ?? emptyOrderElement);
     setIsModalOpened(true);
   };
 
   const openEmptyOrderInModal = (): void => {
+    setErrorMessage('');
+    setIsInputsValid(false);
     setIsNewOrder(true);
     const currentOrder = emptyOrderElement;
     currentOrder.status = OrderStatusEnum.new;
@@ -135,20 +173,34 @@ export default function Orders({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { value, name } = event.target;
     setOpenedOrder({ ...openedOrder, [name]: value });
+    setIsInputsValid(true);
   };
 
   const handleEditOrder = (): void => {
+    const isErrors: boolean = validityCheck(openedOrder);
+    if (isErrors) {
+      return;
+    }
+
     editOrder(openedOrder, orders, setOrders);
     closeModal();
   };
 
   const handleAddNewOrder = (): void => {
+    const isErrors: boolean = validityCheck(openedOrder);
+    if (isErrors) {
+      return;
+    }
+
     addNewOrder(openedOrder, orders, setOrders, latestOrderNumber, setLatestOrderNumber);
     closeModal();
   };
 
   const setNewOrderStatus = (event: any): void => {
     setOpenedOrder({ ...openedOrder, status: event[0] });
+    if (!isInputsValid) {
+      setIsInputsValid(true);
+    }
   };
 
   return (
@@ -175,11 +227,14 @@ export default function Orders({
         isModalOpened={isModalOpened}
         closeModal={closeModal}
         openedOrder={openedOrder}
+        setOpenedOrder={setOpenedOrder}
         handleChange={handleChange}
         setNewOrderStatus={setNewOrderStatus}
         isNewOrder={isNewOrder}
         saveOrder={handleEditOrder}
         addNewOrder={handleAddNewOrder}
+        isInputsValid={isInputsValid}
+        errorMessage={errorMessage}
       />
     </div>
   );
