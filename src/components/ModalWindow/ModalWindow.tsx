@@ -1,7 +1,7 @@
 import './ModalWindow.scss';
 
 // React hooks
-import { useState, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 // Gravity UI components
 import { Button, Modal, Select, Text, TextArea, TextInput } from '@gravity-ui/uikit';
@@ -9,7 +9,6 @@ import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
 
 // Utils
 import { getDate } from '../../utils/getDate';
-// import { validators } from '../../utils/validator';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
@@ -43,9 +42,6 @@ export default function ModalWindow({
   isInputsValid: boolean;
   errorMessage: string;
 }): JSX.Element {
-  // const [orderValidity, setOrderValidity] = useState<boolean>();
-  // const [errorMessage, setErrorMessage] = useState<string>('');
-
   const { Number, DateTime, ClientsFirm, Shipper, ShipperNumber, Comment, Status, AtiCode } =
     tableColumnsEnum;
 
@@ -53,25 +49,6 @@ export default function ModalWindow({
   const statusOptionsArray = Object.values(OrderStatusEnum).map(status => {
     return { content: status, value: status };
   });
-
-  // const validityCheck = (): void => {
-  //   const { clientsFirm, shipperName, shipperPhone, atiCode } = openedOrder;
-  //   const errorsArray = [];
-  //   errorsArray.push(validators.clientsFirmValidator(clientsFirm || ''));
-  //   errorsArray.push(validators.shipperNameValidator(shipperName || ''));
-  //   errorsArray.push(validators.shipperPhoneValidator(shipperPhone || ''));
-  //   errorsArray.push(validators.atiCodeValidator(atiCode));
-  //   let errorMessages: string[] = [];
-  //   errorsArray.forEach(error => {
-  //     if (error.errorMessage.length !== 0) {
-  //       errorMessages.push(error.errorMessage);
-  //     }
-  //   });
-
-  //   let errorStatus: boolean = errorsArray.every(error => error.isValid === true);
-  //   console.log(errorStatus);
-  //   setErrorMessage(errorMessages.join(', '));
-  // };
 
   return (
     <Modal open={isModalOpened} onClose={closeModal}>
@@ -144,7 +121,6 @@ export default function ModalWindow({
             width="max"
             onClick={!isNewOrder ? saveOrder : addNewOrder}
             disabled={!isInputsValid ? true : false}
-            // onClick={validityCheck}
           >
             {!isNewOrder ? (
               <span className="button-content">

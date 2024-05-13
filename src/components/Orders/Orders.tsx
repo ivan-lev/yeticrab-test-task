@@ -83,8 +83,6 @@ export default function Orders({
     } else {
       setIsInputsValid(true);
     }
-    // console.log('isErrors:', isErrors);
-    // console.log(errorsArray);
     return isErrors;
   };
 
