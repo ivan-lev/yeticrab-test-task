@@ -57,6 +57,7 @@
   &__error {
     grid-area: error;
     text-transform: lowercase;
+    max-width: 500px;
   }
 
   &__error::first-letter {
