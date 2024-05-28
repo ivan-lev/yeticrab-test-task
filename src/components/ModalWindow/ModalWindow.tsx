@@ -9,6 +9,7 @@ import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
 
 // Utils
 import { getDate } from '../../utils/getDate';
+import { maskPhoneNumber } from '../../utils/maskPhoneNumber';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
@@ -50,6 +51,15 @@ export default function ModalWindow({
     return { content: status, value: status };
   });
 
+  const handleMaskPhoneNumber = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    let phoneNumber: string = event.target.value;
+    let returnedPhone = maskPhoneNumber(phoneNumber);
+    event.target.value = returnedPhone;
+    handleChange(event);
+  };
+
   return (
     <Modal open={isModalOpened} onClose={closeModal}>
       <div className="modal-window">
@@ -84,7 +94,7 @@ export default function ModalWindow({
           label={ShipperNumber}
           value={openedOrder?.shipperPhone}
           name="shipperPhone"
-          onChange={handleChange}
+          onChange={handleMaskPhoneNumber}
         />
         <div className="modal-window__comment">
           <span>{Comment}:</span>

@@ -45,7 +45,7 @@ export default function Orders({
     datetime: undefined,
     clientsFirm: undefined,
     shipperName: undefined,
-    shipperPhone: undefined,
+    shipperPhone: '+7',
     comment: undefined,
     status: undefined,
     atiCode: undefined
