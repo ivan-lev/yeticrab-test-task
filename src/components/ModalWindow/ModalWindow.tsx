@@ -3,6 +3,11 @@ import './ModalWindow.scss';
 // React hooks
 import { Dispatch, SetStateAction } from 'react';
 
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { closeModal } from '../../slices/modalSlice';
+import { RootState } from '../../slices';
+
 // Gravity UI components
 import { Button, Modal, Select, Text, TextArea, TextInput } from '@gravity-ui/uikit';
 import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
@@ -20,8 +25,6 @@ import { OrderStatusEnum } from '../../types/OrderStatus';
 import { BUTTON_NAMES } from '../../variables/buttonNames';
 
 export default function ModalWindow({
-  isModalOpened,
-  closeModal,
   openedOrder,
   handleChange,
   setNewOrderStatus,
@@ -31,8 +34,6 @@ export default function ModalWindow({
   isInputsValid,
   errorMessage
 }: {
-  isModalOpened: boolean;
-  closeModal: () => void;
   openedOrder: OrderElementType;
   setOpenedOrder: Dispatch<SetStateAction<OrderElementType>>;
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -45,6 +46,9 @@ export default function ModalWindow({
 }): JSX.Element {
   const { Number, DateTime, ClientsFirm, Shipper, ShipperNumber, Comment, Status, AtiCode } =
     tableColumnsEnum;
+
+  const modalState = useSelector((state: RootState) => state.modal.isModalOpened);
+  const dispatch = useDispatch();
 
   // make array of options objects to show in available statuses
   const statusOptionsArray = Object.values(OrderStatusEnum).map(status => {
@@ -61,7 +65,7 @@ export default function ModalWindow({
   };
 
   return (
-    <Modal open={isModalOpened} onClose={closeModal}>
+    <Modal open={modalState} onClose={() => dispatch(closeModal())}>
       <div className="modal-window">
         <TextInput
           className="modal-window__number"
@@ -119,7 +123,11 @@ export default function ModalWindow({
           onChange={handleChange}
         />
         <div className="modal-window__buttons">
-          <Button className="modal-window__button" view="outlined-warning" onClick={closeModal}>
+          <Button
+            className="modal-window__button"
+            view="outlined-warning"
+            onClick={() => dispatch(closeModal())}
+          >
             <span className="button-content">
               <CircleXmark />
               {BUTTON_NAMES.CLOSE}

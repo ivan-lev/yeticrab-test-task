@@ -1,7 +1,13 @@
 import './Orders.scss';
 
-// Hooks
-import { useState, SetStateAction, Dispatch } from 'react';
+// React hooks
+import { useState } from 'react';
+
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../slices';
+import { addOrder, editOrder, deleteOrder } from '../../slices/ordersSlice';
+import { openModal, closeModal } from '../../slices/modalSlice';
 
 // Components
 import ModalWindow from '../ModalWindow/ModalWindow';
@@ -14,9 +20,6 @@ import { CirclePlus } from '@gravity-ui/icons';
 // Utils
 import { getDate } from '../../utils/getDate';
 import { getAtiLink } from '../../utils/getAtiLink';
-import { deleteOrder } from '../../utils/orders/deleteOrder';
-import { editOrder } from '../../utils/orders/editOrder';
-import { addNewOrder } from '../../utils/orders/addNewOrder';
 import { validators } from '../../utils/validator';
 
 // Variables
@@ -27,19 +30,7 @@ import { tableColumnsEnum } from '../../types/tableColumnsType';
 import { OrderElementType } from '../../types/OrderElementType';
 import { OrderStatusEnum } from '../../types/OrderStatus';
 
-export default function Orders({
-  orders,
-  setOrders,
-  isAdminMode,
-  latestOrderNumber,
-  setLatestOrderNumber
-}: {
-  orders: OrderElementType[];
-  setOrders: Dispatch<SetStateAction<OrderElementType[]>>;
-  isAdminMode: boolean;
-  latestOrderNumber: number;
-  setLatestOrderNumber: Dispatch<SetStateAction<number>>;
-}): JSX.Element {
+export default function Orders(): JSX.Element {
   const emptyOrderElement: OrderElementType = {
     number: undefined,
     datetime: undefined,
@@ -51,12 +42,15 @@ export default function Orders({
     atiCode: undefined
   };
 
-  const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
   const [openedOrder, setOpenedOrder] = useState<OrderElementType>(emptyOrderElement);
   const [isNewOrder, setIsNewOrder] = useState<boolean>(false);
 
   const [isInputsValid, setIsInputsValid] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const dispatch = useDispatch();
+  const isUserAdmin = useSelector((state: RootState) => state.users.isUserAdmin);
+  const orders = useSelector((state: RootState) => state.orders.ordersArray);
 
   // this function is checking inputs via validators,
   // set the error message
@@ -124,7 +118,7 @@ export default function Orders({
   });
 
   const getRowActions = () => {
-    return isAdminMode
+    return isUserAdmin
       ? [
           {
             text: BUTTON_NAMES.EDIT_ORDER,
@@ -136,7 +130,7 @@ export default function Orders({
           {
             text: BUTTON_NAMES.DELETE_ORDER,
             handler: (item: TableDataItem) => {
-              deleteOrder(item, orders, setOrders);
+              dispatch(deleteOrder(item));
             },
             theme: 'danger' as const
           }
@@ -149,7 +143,7 @@ export default function Orders({
     setIsInputsValid(false);
     const currentOrder = orders.find(record => record.number === item.id);
     setOpenedOrder(currentOrder ?? emptyOrderElement);
-    setIsModalOpened(true);
+    dispatch(openModal());
   };
 
   const openEmptyOrderInModal = (): void => {
@@ -159,13 +153,7 @@ export default function Orders({
     const currentOrder = emptyOrderElement;
     currentOrder.status = OrderStatusEnum.new;
     setOpenedOrder(currentOrder);
-    setIsModalOpened(true);
-  };
-
-  const closeModal = (): void => {
-    setIsModalOpened(false);
-    setOpenedOrder(emptyOrderElement);
-    isNewOrder && setIsNewOrder(false);
+    dispatch(openModal());
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
@@ -179,9 +167,8 @@ export default function Orders({
     if (isErrors) {
       return;
     }
-
-    editOrder(openedOrder, orders, setOrders);
-    closeModal();
+    dispatch(editOrder(openedOrder));
+    dispatch(closeModal());
   };
 
   const handleAddNewOrder = (): void => {
@@ -189,9 +176,8 @@ export default function Orders({
     if (isErrors) {
       return;
     }
-
-    addNewOrder(openedOrder, orders, setOrders, latestOrderNumber, setLatestOrderNumber);
-    closeModal();
+    dispatch(addOrder(openedOrder));
+    dispatch(closeModal());
   };
 
   const setNewOrderStatus = (event: any): void => {
@@ -211,7 +197,7 @@ export default function Orders({
       />
       <div className="orders__bottom">
         <OrdersCounter amount={orders?.length || 0} />
-        {isAdminMode && (
+        {isUserAdmin && (
           <Button onClick={openEmptyOrderInModal}>
             <span className="button-content">
               <CirclePlus />
@@ -222,8 +208,6 @@ export default function Orders({
       </div>
 
       <ModalWindow
-        isModalOpened={isModalOpened}
-        closeModal={closeModal}
         openedOrder={openedOrder}
         setOpenedOrder={setOpenedOrder}
         handleChange={handleChange}
