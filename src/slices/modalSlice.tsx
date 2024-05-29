@@ -2,10 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface storeState {
   isModalOpened: boolean;
+  isErrors: boolean;
+  errorsMessage: string;
 }
 
 const initialState: storeState = {
-  isModalOpened: false
+  isModalOpened: false,
+  isErrors: false,
+  errorsMessage: ''
 };
 
 const modalSlice = createSlice({
@@ -15,12 +19,18 @@ const modalSlice = createSlice({
     openModal: state => {
       state.isModalOpened = true;
     },
+
     closeModal: state => {
       state.isModalOpened = false;
+    },
+
+    setValidityAndErrors: (state, action) => {
+      state.isErrors = action.payload.isErrors;
+      state.errorsMessage = action.payload.errorMessage;
     }
   }
 });
 
-export const { openModal, closeModal } = modalSlice.actions;
+export const { openModal, closeModal, setValidityAndErrors } = modalSlice.actions;
 
 export default modalSlice.reducer;

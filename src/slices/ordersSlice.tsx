@@ -6,27 +6,53 @@ import type { OrderElementType } from '../types/OrderElementType';
 
 import { getDate } from '../utils/getDate';
 
-interface storeState {
+interface orderState {
   ordersArray: OrderElementType[];
+  openedOrder: OrderElementType;
   newOrderNumber: number;
+  isNewOrder: boolean;
 }
 
-const initialState: storeState = {
+const emptyOrder: OrderElementType = {
+  number: undefined,
+  datetime: undefined,
+  clientsFirm: undefined,
+  shipperName: undefined,
+  shipperPhone: '+7',
+  comment: undefined,
+  status: 'новая',
+  atiCode: undefined
+};
+
+const initialState: orderState = {
   ordersArray: templateOrders,
-  newOrderNumber: 129
+  openedOrder: emptyOrder,
+  newOrderNumber: 129,
+  isNewOrder: false
 };
 
 const ordersSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
+    setOpenedOrder: (state, action) => {
+      state.openedOrder = action.payload;
+    },
+
+    setIsNewStatus: (state, action) => {
+      state.isNewOrder = action.payload;
+      state.openedOrder = { ...emptyOrder };
+    },
+
     addOrder: (state, action) => {
-      const newOrder = action.payload;
-      newOrder.number = state.newOrderNumber;
-      const currentDateTime = String(new Date());
-      newOrder.datetime = getDate(currentDateTime);
+      const newOrder = {
+        ...action.payload,
+        number: state.newOrderNumber,
+        datetime: getDate(String(new Date()))
+      };
       state.ordersArray.push(newOrder);
       state.newOrderNumber += 1;
+      state.openedOrder = { ...emptyOrder };
     },
 
     editOrder: (state, action) => {
@@ -40,10 +66,12 @@ const ordersSlice = createSlice({
           state.ordersArray[index] = updatedOrder;
         }
       });
+
+      state.openedOrder = emptyOrder;
     },
 
     deleteOrder: (state, action) => {
-      const orderNumberToDelete = action.payload.number;
+      const orderNumberToDelete = action.payload;
       const orderIndexToDelete = state.ordersArray.findIndex(
         order => order.number === orderNumberToDelete
       );
@@ -52,5 +80,6 @@ const ordersSlice = createSlice({
   }
 });
 
-export const { addOrder, editOrder, deleteOrder } = ordersSlice.actions;
+export const { addOrder, editOrder, deleteOrder, setOpenedOrder, setIsNewStatus } =
+  ordersSlice.actions;
 export default ordersSlice.reducer;

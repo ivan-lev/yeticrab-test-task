@@ -1,12 +1,13 @@
 import './ModalWindow.scss';
 
-// React hooks
-import { Dispatch, SetStateAction } from 'react';
+// React
+import { useEffect } from 'react';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal } from '../../slices/modalSlice';
+import { closeModal, setValidityAndErrors } from '../../slices/modalSlice';
 import { RootState } from '../../slices';
+import { setOpenedOrder } from '../../slices/ordersSlice';
 
 // Gravity UI components
 import { Button, Modal, Select, Text, TextArea, TextInput } from '@gravity-ui/uikit';
@@ -15,6 +16,7 @@ import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
 // Utils
 import { getDate } from '../../utils/getDate';
 import { maskPhoneNumber } from '../../utils/maskPhoneNumber';
+import { checkValidity } from '../../utils/checkValidity';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
@@ -26,34 +28,39 @@ import { BUTTON_NAMES } from '../../variables/buttonNames';
 
 export default function ModalWindow({
   openedOrder,
-  handleChange,
   setNewOrderStatus,
-  isNewOrder,
   saveOrder,
-  addNewOrder,
-  isInputsValid,
-  errorMessage
+  addNewOrder
 }: {
   openedOrder: OrderElementType;
-  setOpenedOrder: Dispatch<SetStateAction<OrderElementType>>;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   setNewOrderStatus: (event: any) => void;
-  isNewOrder: boolean;
   saveOrder: () => void;
   addNewOrder: () => void;
-  isInputsValid: boolean;
-  errorMessage: string;
 }): JSX.Element {
   const { Number, DateTime, ClientsFirm, Shipper, ShipperNumber, Comment, Status, AtiCode } =
     tableColumnsEnum;
 
-  const modalState = useSelector((state: RootState) => state.modal.isModalOpened);
   const dispatch = useDispatch();
+  const modalState = useSelector((state: RootState) => state.modal.isModalOpened);
+  const isNewOrder = useSelector((state: RootState) => state.orders.isNewOrder);
+
+  const isErrorsRedux = useSelector((state: RootState) => state.modal.isErrors);
+  const errorsMessageRedux = useSelector((state: RootState) => state.modal.errorsMessage);
+
+  useEffect(() => {
+    const validityState = checkValidity(openedOrder);
+    dispatch(setValidityAndErrors(validityState));
+  }, [openedOrder]);
 
   // make array of options objects to show in available statuses
   const statusOptionsArray = Object.values(OrderStatusEnum).map(status => {
     return { content: status, value: status };
   });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const { value, name } = event.target;
+    dispatch(setOpenedOrder({ ...openedOrder, [name]: value }));
+  };
 
   const handleMaskPhoneNumber = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -138,23 +145,25 @@ export default function ModalWindow({
             view="outlined-success"
             width="max"
             onClick={!isNewOrder ? saveOrder : addNewOrder}
-            disabled={!isInputsValid ? true : false}
+            disabled={isErrorsRedux}
           >
-            {!isNewOrder ? (
-              <span className="button-content">
-                <FloppyDisk />
-                {BUTTON_NAMES.SAVE}
-              </span>
-            ) : (
-              <span className="button-content">
-                <CirclePlus />
-                {BUTTON_NAMES.ADD_ORDER}
-              </span>
-            )}
+            <span className="button-content">
+              {!isNewOrder ? (
+                <>
+                  <FloppyDisk />
+                  {BUTTON_NAMES.SAVE}
+                </>
+              ) : (
+                <>
+                  <CirclePlus />
+                  {BUTTON_NAMES.ADD_ORDER}
+                </>
+              )}
+            </span>
           </Button>
         </div>
         <Text className="modal-window__error" whiteSpace={'break-spaces'}>
-          {isInputsValid ? `` : `Ошибка: ${errorMessage}`}
+          {isErrorsRedux && `Ошибка: ${errorsMessageRedux}`}
         </Text>
       </div>
     </Modal>
