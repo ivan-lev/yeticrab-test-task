@@ -5,7 +5,12 @@ import { useEffect } from 'react';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal, setValidityAndErrors } from '../../slices/modalSlice';
+import {
+  closeModal,
+  setShowErrorInModal,
+  setValidityAndErrors,
+  setButtonBlockedStatus
+} from '../../slices/modalSlice';
 import { RootState } from '../../slices';
 import { setOpenedOrder } from '../../slices/ordersSlice';
 
@@ -41,16 +46,29 @@ export default function ModalWindow({
     tableColumnsEnum;
 
   const dispatch = useDispatch();
-  const modalState = useSelector((state: RootState) => state.modal.isModalOpened);
   const isNewOrder = useSelector((state: RootState) => state.orders.isNewOrder);
 
-  const isErrorsRedux = useSelector((state: RootState) => state.modal.isErrors);
-  const errorsMessageRedux = useSelector((state: RootState) => state.modal.errorsMessage);
+  const isErrorShown = useSelector((state: RootState) => state.modal.isErrorShown);
+  const isModalOpened = useSelector((state: RootState) => state.modal.isModalOpened);
+  const isError = useSelector((state: RootState) => state.modal.isErrors);
+  const errorMessage = useSelector((state: RootState) => state.modal.errorMessage);
+  const isButtonBlocked = useSelector((state: RootState) => state.modal.isButtonBlocked);
 
   useEffect(() => {
     const validityState = checkValidity(openedOrder);
     dispatch(setValidityAndErrors(validityState));
   }, [openedOrder]);
+
+  useEffect(() => {
+    if (!isError) {
+      dispatch(setShowErrorInModal(false));
+    }
+    if (isError) {
+      dispatch(setButtonBlockedStatus(true));
+    } else {
+      dispatch(setButtonBlockedStatus(false));
+    }
+  }, [isError]);
 
   // make array of options objects to show in available statuses
   const statusOptionsArray = Object.values(OrderStatusEnum).map(status => {
@@ -60,6 +78,9 @@ export default function ModalWindow({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { value, name } = event.target;
     dispatch(setOpenedOrder({ ...openedOrder, [name]: value }));
+    if (isError) {
+      dispatch(setShowErrorInModal(true));
+    }
   };
 
   const handleMaskPhoneNumber = (
@@ -72,7 +93,7 @@ export default function ModalWindow({
   };
 
   return (
-    <Modal open={modalState} onClose={() => dispatch(closeModal())}>
+    <Modal open={isModalOpened} onClose={() => dispatch(closeModal())}>
       <div className="modal-window">
         <TextInput
           className="modal-window__number"
@@ -145,7 +166,7 @@ export default function ModalWindow({
             view="outlined-success"
             width="max"
             onClick={!isNewOrder ? saveOrder : addNewOrder}
-            disabled={isErrorsRedux}
+            disabled={isButtonBlocked}
           >
             <span className="button-content">
               {!isNewOrder ? (
@@ -163,7 +184,7 @@ export default function ModalWindow({
           </Button>
         </div>
         <Text className="modal-window__error" whiteSpace={'break-spaces'}>
-          {isErrorsRedux && `Ошибка: ${errorsMessageRedux}`}
+          {isErrorShown && `Ошибка: ${errorMessage}`}
         </Text>
       </div>
     </Modal>

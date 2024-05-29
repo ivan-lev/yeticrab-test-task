@@ -29,7 +29,7 @@ export const templateOrders: OrderElementType[] = [
     shipperPhone: '+7-932-317-1754',
     comment: 'Не кантовать',
     status: 'завершено',
-    atiCode: 1437
+    atiCode: 14374
   },
   {
     number: 124,
@@ -39,7 +39,7 @@ export const templateOrders: OrderElementType[] = [
     shipperPhone: '+7-909-745-4564',
     comment: 'Пищевые товары',
     status: 'новая',
-    atiCode: 1420
+    atiCode: 14203
   },
   {
     number: 125,
@@ -49,7 +49,7 @@ export const templateOrders: OrderElementType[] = [
     shipperPhone: '+7-911-300-4686',
     comment: 'Очень хрупкий товар',
     status: 'новая',
-    atiCode: 1438
+    atiCode: 14382
   },
   {
     number: 126,
@@ -79,6 +79,6 @@ export const templateOrders: OrderElementType[] = [
     shipperPhone: '+7-932-317-1754',
     comment: 'Не кантовать',
     status: 'завершено',
-    atiCode: 1437
+    atiCode: 14373
   }
 ];

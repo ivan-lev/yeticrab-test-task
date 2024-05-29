@@ -26,6 +26,5 @@ export const checkValidity = (
   const errorMessage = errorMessagesArray.join(', ');
 
   const isErrors: boolean = errorsArray.some(error => error.isValid === false);
-  //   const allInputsValid: boolean = errorsArray.every(error => error.isValid === true);
   return { isErrors, errorMessage };
 };

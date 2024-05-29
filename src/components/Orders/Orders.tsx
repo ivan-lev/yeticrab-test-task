@@ -1,8 +1,5 @@
 import './Orders.scss';
 
-// React hooks
-import { useState } from 'react';
-
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../slices';
@@ -13,7 +10,7 @@ import {
   setOpenedOrder,
   setIsNewStatus
 } from '../../slices/ordersSlice';
-import { openModal, closeModal } from '../../slices/modalSlice';
+import { openModal, closeModal, setShowErrorInModal } from '../../slices/modalSlice';
 
 // Components
 import ModalWindow from '../ModalWindow/ModalWindow';
@@ -32,24 +29,8 @@ import { BUTTON_NAMES } from '../../variables/buttonNames';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
-// import { OrderElementType } from '../../types/OrderElementType';
-import { OrderStatusEnum } from '../../types/OrderStatus';
 
 export default function Orders(): JSX.Element {
-  // const emptyOrderElement: OrderElementType = {
-  //   number: undefined,
-  //   datetime: undefined,
-  //   clientsFirm: undefined,
-  //   shipperName: undefined,
-  //   shipperPhone: '+7',
-  //   comment: undefined,
-  //   status: OrderStatusEnum.new,
-  //   atiCode: undefined
-  // };
-
-  const [isInputsValid, setIsInputsValid] = useState<boolean>(false);
-  // const [errorMessage, setErrorMessage] = useState<string>('');
-
   const dispatch = useDispatch();
   const isUserAdmin = useSelector((state: RootState) => state.users.isUserAdmin);
   const orders = useSelector((state: RootState) => state.orders.ordersArray);
@@ -98,7 +79,7 @@ export default function Orders(): JSX.Element {
           {
             text: BUTTON_NAMES.EDIT_ORDER,
             handler: (item: TableDataItem) => {
-              openOrderInModalRedux(item);
+              openOrderInModal(item);
             },
             theme: 'normal' as const
           },
@@ -113,10 +94,8 @@ export default function Orders(): JSX.Element {
       : [];
   };
 
-  const openOrderInModalRedux = (item: TableDataItem): void => {
+  const openOrderInModal = (item: TableDataItem): void => {
     dispatch(setIsNewStatus(false));
-    // setErrorMessage('');
-    setIsInputsValid(false);
     const currentOrder = orders.find(order => order.number === item.id);
     dispatch(setOpenedOrder(currentOrder));
     dispatch(openModal());
@@ -124,10 +103,6 @@ export default function Orders(): JSX.Element {
 
   const openEmptyOrderInModal = (): void => {
     dispatch(setIsNewStatus(true));
-    // setErrorMessage('');
-    setIsInputsValid(false);
-    // const currentOrder = emptyOrderElement;
-    // currentOrder.status = OrderStatusEnum.new;
     dispatch(openModal());
   };
 
@@ -139,13 +114,11 @@ export default function Orders(): JSX.Element {
   const handleAddNewOrder = (): void => {
     dispatch(addOrder(openedOrder));
     dispatch(closeModal());
+    dispatch(setShowErrorInModal(false));
   };
 
   const setNewOrderStatus = (event: any): void => {
     dispatch(setOpenedOrder({ ...openedOrder, status: event[0] }));
-    if (!isInputsValid) {
-      setIsInputsValid(true);
-    }
   };
 
   return (
