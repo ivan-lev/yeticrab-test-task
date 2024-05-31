@@ -22,31 +22,23 @@ import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
 import { getDate } from '../../utils/getDate';
 import { maskPhoneNumber } from '../../utils/maskPhoneNumber';
 import { checkValidity } from '../../utils/checkValidity';
+import { handleAddNewOrder } from '../../utils/orders/addNewOrder';
+import { handleEditOrder } from '../../utils/orders/editOrder';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
-import { OrderElementType } from '../../types/OrderElementType';
 import { OrderStatusEnum } from '../../types/OrderStatus';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
 
-export default function ModalWindow({
-  openedOrder,
-  setNewOrderStatus,
-  saveOrder,
-  addNewOrder
-}: {
-  openedOrder: OrderElementType;
-  setNewOrderStatus: (event: any) => void;
-  saveOrder: () => void;
-  addNewOrder: () => void;
-}): JSX.Element {
+export default function ModalWindow(): JSX.Element {
   const { Number, DateTime, ClientsFirm, Shipper, ShipperNumber, Comment, Status, AtiCode } =
     tableColumnsEnum;
 
   const dispatch = useDispatch();
   const isNewOrder = useSelector((state: RootState) => state.orders.isNewOrder);
+  const openedOrder = useSelector((state: RootState) => state.orders.openedOrder);
 
   const isErrorShown = useSelector((state: RootState) => state.modal.isErrorShown);
   const isModalOpened = useSelector((state: RootState) => state.modal.isModalOpened);
@@ -60,13 +52,22 @@ export default function ModalWindow({
   }, [openedOrder]);
 
   useEffect(() => {
+    // if no errors - hide errors
     if (!isError) {
       dispatch(setShowErrorInModal(false));
+      dispatch(setButtonBlockedStatus(false));
     }
+
     if (isError) {
       dispatch(setButtonBlockedStatus(true));
+    }
+    // when modal opened with new order - don't show errors
+    // because user didn't do anything yet
+    if (isError && isErrorShown) {
+      dispatch(setShowErrorInModal(true));
+      // dispatch(setButtonBlockedStatus(true));
     } else {
-      dispatch(setButtonBlockedStatus(false));
+      // dispatch(setButtonBlockedStatus(false));
     }
   }, [isError]);
 
@@ -81,6 +82,8 @@ export default function ModalWindow({
     if (isError) {
       dispatch(setShowErrorInModal(true));
     }
+    // const validityState = checkValidity(openedOrder);
+    // dispatch(setValidityAndErrors(validityState));
   };
 
   const handleMaskPhoneNumber = (
@@ -99,38 +102,43 @@ export default function ModalWindow({
           className="modal-window__number"
           label={Number}
           disabled={true}
-          value={openedOrder?.number?.toString()}
+          value={openedOrder?.number?.toString() || ''}
         />
         <TextInput
           className="modal-window__date-time"
           label={DateTime}
           disabled={true}
-          value={getDate(openedOrder?.datetime)}
+          value={getDate(openedOrder?.datetime) || ''}
         />
         <TextInput
           className="modal-window__clients-firm"
           label={ClientsFirm}
-          value={openedOrder?.clientsFirm}
+          value={openedOrder?.clientsFirm || ''}
           name="clientsFirm"
           onChange={handleChange}
         />
         <TextInput
           className="modal-window__shipper-name"
           label={Shipper}
-          value={openedOrder?.shipperName}
+          value={openedOrder?.shipperName || ''}
           name="shipperName"
           onChange={handleChange}
         />
         <TextInput
           className="modal-window__shipper-phone"
           label={ShipperNumber}
-          value={openedOrder?.shipperPhone}
+          value={openedOrder?.shipperPhone || ''}
           name="shipperPhone"
           onChange={handleMaskPhoneNumber}
         />
         <div className="modal-window__comment">
           <span>{Comment}:</span>
-          <TextArea rows={2} value={openedOrder?.comment} name="comment" onChange={handleChange} />
+          <TextArea
+            rows={2}
+            value={openedOrder?.comment || ''}
+            name="comment"
+            onChange={handleChange}
+          />
         </div>
         <div>
           {Status}
@@ -138,15 +146,16 @@ export default function ModalWindow({
           <Select
             className="modal-window__status"
             placeholder={openedOrder?.status}
-            onUpdate={setNewOrderStatus}
+            onUpdate={event => dispatch(setOpenedOrder({ ...openedOrder, status: event[0] }))}
             options={statusOptionsArray}
+            value={[openedOrder.status]}
           />
         </div>
 
         <TextInput
           className="modal-window__ati-code"
           label={AtiCode}
-          value={openedOrder?.atiCode?.toString()}
+          value={openedOrder?.atiCode?.toString() || ''}
           name="atiCode"
           onChange={handleChange}
         />
@@ -165,7 +174,15 @@ export default function ModalWindow({
             className="button modal-window__button"
             view="outlined-success"
             width="max"
-            onClick={!isNewOrder ? saveOrder : addNewOrder}
+            onClick={
+              !isNewOrder
+                ? () => {
+                    handleEditOrder(dispatch, openedOrder);
+                  }
+                : () => {
+                    handleAddNewOrder(dispatch, openedOrder);
+                  }
+            }
             disabled={isButtonBlocked}
           >
             <span className="button-content">

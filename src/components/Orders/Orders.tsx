@@ -3,14 +3,8 @@ import './Orders.scss';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../slices';
-import {
-  addOrder,
-  editOrder,
-  deleteOrder,
-  setOpenedOrder,
-  setIsNewStatus
-} from '../../slices/ordersSlice';
-import { openModal, closeModal, setShowErrorInModal } from '../../slices/modalSlice';
+import { deleteOrder, setOpenedOrder, setIsNewStatus } from '../../slices/ordersSlice';
+import { openModal, setShowErrorInModal } from '../../slices/modalSlice';
 
 // Components
 import ModalWindow from '../ModalWindow/ModalWindow';
@@ -23,6 +17,8 @@ import { CirclePlus } from '@gravity-ui/icons';
 // Utils
 import { getDate } from '../../utils/getDate';
 import { getAtiLink } from '../../utils/getAtiLink';
+import { openEmptyModal } from '../../utils/orders/openEmptyModal';
+import { openOrderInModal } from '../../utils/orders/openOrderInModal';
 
 // Variables
 import { BUTTON_NAMES } from '../../variables/buttonNames';
@@ -34,7 +30,6 @@ export default function Orders(): JSX.Element {
   const dispatch = useDispatch();
   const isUserAdmin = useSelector((state: RootState) => state.users.isUserAdmin);
   const orders = useSelector((state: RootState) => state.orders.ordersArray);
-  const openedOrder = useSelector((state: RootState) => state.orders.openedOrder);
 
   const MyTable = withTableActions(Table);
 
@@ -79,7 +74,7 @@ export default function Orders(): JSX.Element {
           {
             text: BUTTON_NAMES.EDIT_ORDER,
             handler: (item: TableDataItem) => {
-              openOrderInModal(item);
+              openOrderInModal(dispatch, orders, item);
             },
             theme: 'normal' as const
           },
@@ -94,33 +89,6 @@ export default function Orders(): JSX.Element {
       : [];
   };
 
-  const openOrderInModal = (item: TableDataItem): void => {
-    dispatch(setIsNewStatus(false));
-    const currentOrder = orders.find(order => order.number === item.id);
-    dispatch(setOpenedOrder(currentOrder));
-    dispatch(openModal());
-  };
-
-  const openEmptyOrderInModal = (): void => {
-    dispatch(setIsNewStatus(true));
-    dispatch(openModal());
-  };
-
-  const handleEditOrder = (): void => {
-    dispatch(editOrder(openedOrder));
-    dispatch(closeModal());
-  };
-
-  const handleAddNewOrder = (): void => {
-    dispatch(addOrder(openedOrder));
-    dispatch(closeModal());
-    dispatch(setShowErrorInModal(false));
-  };
-
-  const setNewOrderStatus = (event: any): void => {
-    dispatch(setOpenedOrder({ ...openedOrder, status: event[0] }));
-  };
-
   return (
     <div className="orders">
       <MyTable
@@ -132,7 +100,11 @@ export default function Orders(): JSX.Element {
       <div className="orders__bottom">
         <OrdersCounter amount={orders?.length || 0} />
         {isUserAdmin && (
-          <Button onClick={openEmptyOrderInModal}>
+          <Button
+            onClick={() => {
+              openEmptyModal(dispatch);
+            }}
+          >
             <span className="button-content">
               <CirclePlus />
               {BUTTON_NAMES.ADD_ORDER}
@@ -141,12 +113,7 @@ export default function Orders(): JSX.Element {
         )}
       </div>
 
-      <ModalWindow
-        openedOrder={openedOrder}
-        setNewOrderStatus={setNewOrderStatus}
-        saveOrder={handleEditOrder}
-        addNewOrder={handleAddNewOrder}
-      />
+      <ModalWindow />
     </div>
   );
 }

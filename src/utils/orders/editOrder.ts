@@ -1,23 +1,13 @@
 //edit order data and push it instead of old
 
-import { SetStateAction } from 'react';
+import { Dispatch } from '@reduxjs/toolkit';
 
-import { OrderElementType as T } from '../../types/OrderElementType';
+import { OrderElementType } from '../../types/OrderElementType';
 
-export function editOrder(
-  newOrder: T,
-  orders: T[],
-  setOrders: (value: SetStateAction<Array<T>>) => void
-): void {
-  let newOrders: T[] = [];
+import { editOrder as edit } from '../../slices/ordersSlice';
+import { closeModal } from '../../slices/modalSlice';
 
-  orders.forEach(order => {
-    if (order.number !== newOrder.number) {
-      newOrders.push(order);
-    }
-    if (order.number === newOrder.number) {
-      newOrders.push(newOrder);
-    }
-  });
-  setOrders(newOrders);
-}
+export const handleEditOrder = (dispatch: Dispatch, order: OrderElementType): void => {
+  dispatch(edit(order));
+  dispatch(closeModal());
+};

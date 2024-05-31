@@ -5,6 +5,6 @@ export interface OrderElementType {
   shipperName: string | undefined;
   shipperPhone: string | undefined;
   comment?: string | undefined;
-  status: string | undefined;
+  status: string | 'новая';
   atiCode: number | undefined;
 }

@@ -45,12 +45,12 @@ const ordersSlice = createSlice({
     },
 
     addOrder: (state, action) => {
-      const newOrder = {
+      const orderToAdd = {
         ...action.payload,
         number: state.newOrderNumber,
         datetime: getDate(String(new Date()))
       };
-      state.ordersArray.push(newOrder);
+      state.ordersArray.push(orderToAdd);
       state.newOrderNumber += 1;
       state.openedOrder = { ...emptyOrder };
     },
@@ -67,7 +67,7 @@ const ordersSlice = createSlice({
         }
       });
 
-      state.openedOrder = emptyOrder;
+      state.openedOrder = { ...emptyOrder };
     },
 
     deleteOrder: (state, action) => {

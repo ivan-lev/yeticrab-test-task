@@ -1,20 +1,15 @@
 // put new order in the end of the orders array
 
-import { SetStateAction } from 'react';
+import { Dispatch } from '@reduxjs/toolkit';
 
-import { OrderElementType as T } from '../../types/OrderElementType';
+import { OrderElementType } from '../../types/OrderElementType';
 
-export const addNewOrder = (
-  newOrder: T,
-  orders: T[],
-  setOrders: (value: SetStateAction<Array<T>>) => void,
-  orderNumber: number,
-  setOrderNumber: (value: SetStateAction<number>) => void
-): void => {
-  newOrder.number = orderNumber;
-  const currentTime = new Date();
-  newOrder.datetime = currentTime.toISOString();
-  setOrderNumber(orderNumber + 1);
-  const newOrders = [...orders, newOrder];
-  setOrders(newOrders);
+import { addOrder } from '../../slices/ordersSlice';
+import { closeModal } from '../../slices/modalSlice';
+import { setShowErrorInModal } from '../../slices/modalSlice';
+
+export const handleAddNewOrder = (dispatch: Dispatch, order: OrderElementType): void => {
+  dispatch(addOrder(order));
+  dispatch(closeModal());
+  dispatch(setShowErrorInModal(false));
 };

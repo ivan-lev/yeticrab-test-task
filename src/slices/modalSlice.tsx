@@ -28,6 +28,8 @@ const modalSlice = createSlice({
       state.isModalOpened = false;
       state.isErrorShown = false;
       state.errorMessage = '';
+      state.isButtonBlocked = true;
+      state.isErrors = false;
     },
 
     setValidityAndErrors: (state, action) => {
