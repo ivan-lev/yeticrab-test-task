@@ -2,17 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface modalState {
   isModalOpened: boolean;
+  isDataEdited: boolean;
   isErrors: boolean;
-  errorMessage: string;
   isErrorShown: boolean;
+  errorMessage: string;
   isButtonBlocked: boolean;
 }
 
 const initialState: modalState = {
   isModalOpened: false,
+  isDataEdited: false,
   isErrors: false,
-  errorMessage: '',
   isErrorShown: false,
+  errorMessage: '',
   isButtonBlocked: true
 };
 
@@ -30,6 +32,7 @@ const modalSlice = createSlice({
       state.errorMessage = '';
       state.isButtonBlocked = true;
       state.isErrors = false;
+      state.isDataEdited = false;
     },
 
     setValidityAndErrors: (state, action) => {
@@ -43,6 +46,10 @@ const modalSlice = createSlice({
 
     setButtonBlockedStatus: (state, action) => {
       state.isButtonBlocked = action.payload;
+    },
+
+    setIsDataEdited: (state, action) => {
+      state.isDataEdited = action.payload;
     }
   }
 });
@@ -52,7 +59,8 @@ export const {
   closeModal,
   setValidityAndErrors,
   setShowErrorInModal,
-  setButtonBlockedStatus
+  setButtonBlockedStatus,
+  setIsDataEdited
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

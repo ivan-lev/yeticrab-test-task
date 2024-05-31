@@ -4,10 +4,10 @@ import { Dispatch } from '@reduxjs/toolkit';
 
 import { OrderElementType } from '../../types/OrderElementType';
 
-import { editOrder as edit } from '../../slices/ordersSlice';
+import { updateOrder } from '../../slices/ordersSlice';
 import { closeModal } from '../../slices/modalSlice';
 
-export const handleEditOrder = (dispatch: Dispatch, order: OrderElementType): void => {
-  dispatch(edit(order));
+export const handleUpdateOrder = (dispatch: Dispatch, order: OrderElementType): void => {
+  dispatch(updateOrder(order));
   dispatch(closeModal());
 };

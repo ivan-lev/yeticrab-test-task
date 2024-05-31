@@ -3,8 +3,7 @@ import './Orders.scss';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../slices';
-import { deleteOrder, setOpenedOrder, setIsNewStatus } from '../../slices/ordersSlice';
-import { openModal, setShowErrorInModal } from '../../slices/modalSlice';
+import { deleteOrder } from '../../slices/ordersSlice';
 
 // Components
 import ModalWindow from '../ModalWindow/ModalWindow';

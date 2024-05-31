@@ -39,9 +39,12 @@ const ordersSlice = createSlice({
       state.openedOrder = action.payload;
     },
 
+    setEmptyOrder: state => {
+      state.openedOrder = { ...emptyOrder };
+    },
+
     setIsNewStatus: (state, action) => {
       state.isNewOrder = action.payload;
-      state.openedOrder = { ...emptyOrder };
     },
 
     addOrder: (state, action) => {
@@ -55,7 +58,7 @@ const ordersSlice = createSlice({
       state.openedOrder = { ...emptyOrder };
     },
 
-    editOrder: (state, action) => {
+    updateOrder: (state, action) => {
       let updatedOrder = action.payload;
 
       state.ordersArray.forEach((order, index) => {
@@ -80,6 +83,6 @@ const ordersSlice = createSlice({
   }
 });
 
-export const { addOrder, editOrder, deleteOrder, setOpenedOrder, setIsNewStatus } =
+export const { addOrder, updateOrder, deleteOrder, setOpenedOrder, setEmptyOrder, setIsNewStatus } =
   ordersSlice.actions;
 export default ordersSlice.reducer;

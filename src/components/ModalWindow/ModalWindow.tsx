@@ -9,7 +9,8 @@ import {
   closeModal,
   setShowErrorInModal,
   setValidityAndErrors,
-  setButtonBlockedStatus
+  setButtonBlockedStatus,
+  setIsDataEdited
 } from '../../slices/modalSlice';
 import { RootState } from '../../slices';
 import { setOpenedOrder } from '../../slices/ordersSlice';
@@ -22,8 +23,8 @@ import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
 import { getDate } from '../../utils/getDate';
 import { maskPhoneNumber } from '../../utils/maskPhoneNumber';
 import { checkValidity } from '../../utils/checkValidity';
-import { handleAddNewOrder } from '../../utils/orders/addNewOrder';
-import { handleEditOrder } from '../../utils/orders/editOrder';
+import { handleAddNewOrder } from '../../utils/orders/handleAddNewOrder';
+import { handleUpdateOrder } from '../../utils/orders/handleUpdateOrder';
 
 // Types, interfaces
 import { tableColumnsEnum } from '../../types/tableColumnsType';
@@ -42,34 +43,29 @@ export default function ModalWindow(): JSX.Element {
 
   const isErrorShown = useSelector((state: RootState) => state.modal.isErrorShown);
   const isModalOpened = useSelector((state: RootState) => state.modal.isModalOpened);
-  const isError = useSelector((state: RootState) => state.modal.isErrors);
+  const isErrors = useSelector((state: RootState) => state.modal.isErrors);
   const errorMessage = useSelector((state: RootState) => state.modal.errorMessage);
   const isButtonBlocked = useSelector((state: RootState) => state.modal.isButtonBlocked);
+  const isDataEdited = useSelector((state: RootState) => state.modal.isDataEdited);
 
   useEffect(() => {
-    const validityState = checkValidity(openedOrder);
-    dispatch(setValidityAndErrors(validityState));
-  }, [openedOrder]);
+    if (isModalOpened && isDataEdited) {
+      const validityState = checkValidity(openedOrder);
+      dispatch(setValidityAndErrors(validityState));
+    }
+  }, [openedOrder, isModalOpened, isDataEdited]);
 
   useEffect(() => {
-    // if no errors - hide errors
-    if (!isError) {
+    if (isModalOpened && isErrors) {
+      dispatch(setShowErrorInModal(true));
+      dispatch(setButtonBlockedStatus(true));
+    }
+
+    if (isModalOpened && !isErrors && isDataEdited) {
       dispatch(setShowErrorInModal(false));
       dispatch(setButtonBlockedStatus(false));
     }
-
-    if (isError) {
-      dispatch(setButtonBlockedStatus(true));
-    }
-    // when modal opened with new order - don't show errors
-    // because user didn't do anything yet
-    if (isError && isErrorShown) {
-      dispatch(setShowErrorInModal(true));
-      // dispatch(setButtonBlockedStatus(true));
-    } else {
-      // dispatch(setButtonBlockedStatus(false));
-    }
-  }, [isError]);
+  }, [isErrors, isModalOpened, isDataEdited]);
 
   // make array of options objects to show in available statuses
   const statusOptionsArray = Object.values(OrderStatusEnum).map(status => {
@@ -79,11 +75,7 @@ export default function ModalWindow(): JSX.Element {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { value, name } = event.target;
     dispatch(setOpenedOrder({ ...openedOrder, [name]: value }));
-    if (isError) {
-      dispatch(setShowErrorInModal(true));
-    }
-    // const validityState = checkValidity(openedOrder);
-    // dispatch(setValidityAndErrors(validityState));
+    dispatch(setIsDataEdited(true));
   };
 
   const handleMaskPhoneNumber = (
@@ -177,7 +169,7 @@ export default function ModalWindow(): JSX.Element {
             onClick={
               !isNewOrder
                 ? () => {
-                    handleEditOrder(dispatch, openedOrder);
+                    handleUpdateOrder(dispatch, openedOrder);
                   }
                 : () => {
                     handleAddNewOrder(dispatch, openedOrder);
