@@ -22,6 +22,7 @@ import { CirclePlus, CircleXmark, FloppyDisk } from '@gravity-ui/icons';
 // Utils
 import { getDate } from '../../utils/getDate';
 import { maskPhoneNumber } from '../../utils/maskPhoneNumber';
+import { maskAtiCode } from '../../utils/maskAtiCode';
 import { checkValidity } from '../../utils/checkValidity';
 import { handleAddNewOrder } from '../../utils/orders/handleAddNewOrder';
 import { handleUpdateOrder } from '../../utils/orders/handleUpdateOrder';
@@ -87,6 +88,13 @@ export default function ModalWindow(): JSX.Element {
     handleChange(event);
   };
 
+  const handleMaskAtiCode = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    let atiCode: string = event.target.value;
+    let returnedAtiCode = maskAtiCode(atiCode);
+    event.target.value = returnedAtiCode;
+    handleChange(event);
+  };
+
   return (
     <Modal open={isModalOpened} onClose={() => dispatch(closeModal())}>
       <div className="modal-window">
@@ -149,7 +157,7 @@ export default function ModalWindow(): JSX.Element {
           label={AtiCode}
           value={openedOrder?.atiCode?.toString() || ''}
           name="atiCode"
-          onChange={handleChange}
+          onChange={handleMaskAtiCode}
         />
         <div className="modal-window__buttons">
           <Button
